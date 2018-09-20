@@ -12,7 +12,6 @@ const actions = {
   }),
   verifyUserLogin ({ dispatch }, payload) {
     return firebaseFunc.verifyUserLogin(payload).then(res => {
-      console.log(res, 'res in action')
       if (res.success) {
         dispatch('setUserLogin', res.data.userRef)
       }
@@ -23,7 +22,10 @@ const actions = {
     bindFirebaseRef
   }, { ref }) => {
     bindFirebaseRef('userLogin', ref)
-  })
+  }),
+  setPassword (_, params) {
+    firebaseFunc.setPassword(params)
+  }
 }
 const getters = {
   getStudents: state => state.students,

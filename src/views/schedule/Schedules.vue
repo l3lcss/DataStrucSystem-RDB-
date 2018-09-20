@@ -11,7 +11,7 @@ import { mapGetters } from 'vuex'
 var stdRef = db.ref('students')
 
 export default {
-  name: 'HelloWorld',
+  name: 'Schedules',
   computed: {
     ...mapGetters([
       'getStudents',

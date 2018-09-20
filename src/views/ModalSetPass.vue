@@ -50,7 +50,7 @@ export default {
     async setPass () {
       if (this.pass === this.re_pass && this.pass && this.re_pass) {
         const params = {
-          id: this.getUserLogin.ID.toString(),
+          id: this.getUserLogin['.key'],
           pass: this.pass
         }
         this.setPassword(params)

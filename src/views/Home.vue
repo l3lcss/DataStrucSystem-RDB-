@@ -89,7 +89,6 @@ export default {
           pass: this.password
         }
         const res = await this.verifyUserLogin(params)
-        console.log(res, 'res')
         if (res.success && res.data.FIRST_LOGIN) {
           this.isComponentModalActive = true
         } else if (res.success && res.data.identity === 'Admin') {
@@ -97,17 +96,10 @@ export default {
           this.$router.push({ name: 'Admin' })
         } else if (res.success && res.data.identity === 'User') {
           this.$alert(res.message, 'is-success')
-          this.$router.push({ name: 'HelloWorld' })
-          // this.$router.push({ name: 'Dashboard' })
+          this.$router.push({ name: 'Schedules' })
         } else {
           this.$alert(res.message, 'is-danger')
         }
-        // const params = {
-        //   id: this.studentID,
-        //   pass: this.password
-        // }
-        // const res = await this.verifyUserLogin(params)
-        // console.log(res, 'res')
       }
       this.setIsLoading(false)
     }

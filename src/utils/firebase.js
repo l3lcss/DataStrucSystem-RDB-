@@ -44,5 +44,11 @@ export default {
         resolve(prepareResults)
       })
     })
+  },
+  setPassword (params) {
+    db.ref(`students/${params.id}`).update({
+      FIRST_LOGIN: 0,
+      password: params.pass
+    })
   }
 }
