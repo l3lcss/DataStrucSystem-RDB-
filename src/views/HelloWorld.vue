@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
-    {{ students }}
+    {{ getStudents }} students <br>
+    {{ getUserLogin }} userLogin
   </div>
 </template>
 
@@ -13,7 +14,8 @@ export default {
   name: 'HelloWorld',
   computed: {
     ...mapGetters([
-      'students'
+      'getStudents',
+      'getUserLogin'
     ])
   },
   created () {

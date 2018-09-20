@@ -1,7 +1,7 @@
 <template>
   <div class="columns is-mobile is-centered">
     <div class="column">
-      <b-loading :is-full-page="true" :active.sync="isLoading"></b-loading>
+      <b-loading :is-full-page="true" :active.sync="getIsLoading"></b-loading>
       <div class="columns is-mobile is-centered ">
         <div class="column is-8">
           <div class="glitch load1 " data-text="BLACKPINK" style="color:white;margin-bottom:1vh;">BLACKPINK</div>
@@ -55,13 +55,12 @@
 <script>
 import ScrollReveal from 'scrollreveal'
 import ModalSetPass from './ModalSetPass'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
   data () {
     return {
-      isLoading: false,
       studentID: '',
       password: '',
       isComponentModalActive: false
@@ -79,33 +78,45 @@ export default {
   },
   methods: {
     ...mapActions([
+      'setIsLoading',
       'verifyUserLogin'
     ]),
     async Login () {
-      this.isLoading = true
+      this.setIsLoading(true)
       if (this.studentID) {
-        this.verifyUserLogin('asdfghjk')
-        this.$router.push({ name: 'HelloWorld' })
+        const params = {
+          id: this.studentID,
+          pass: this.password
+        }
+        const res = await this.verifyUserLogin(params)
+        console.log(res, 'res')
+        if (res.success && res.data.FIRST_LOGIN) {
+          this.isComponentModalActive = true
+        } else if (res.success && res.data.identity === 'Admin') {
+          this.$alert(res.message, 'is-success')
+          this.$router.push({ name: 'Admin' })
+        } else if (res.success && res.data.identity === 'User') {
+          this.$alert(res.message, 'is-success')
+          this.$router.push({ name: 'HelloWorld' })
+          // this.$router.push({ name: 'Dashboard' })
+        } else {
+          this.$alert(res.message, 'is-danger')
+        }
         // const params = {
         //   id: this.studentID,
         //   pass: this.password
         // }
         // const res = await this.verifyUserLogin(params)
         // console.log(res, 'res')
-        // if (res.data.FIRST_LOGIN) {
-        //   this.isComponentModalActive = true
-        // } else if (res.success && res.data.identity === 'Admin') {
-        //   this.$alert(res.message, 'is-success')
-        //   this.$router.push({ name: 'Admin' })
-        // } else if (res.success) {
-        //   this.$alert(res.message, 'is-success')
-        //   this.$router.push({ name: 'Dashboard' })
-        // } else {
-        //   this.$alert(res.message, 'is-danger')
-        // }
       }
-      this.isLoading = false
+      this.setIsLoading(false)
     }
+  },
+  computed: {
+    ...mapGetters([
+      'getIsLoading',
+      'getUserLogin'
+    ])
   }
 }
 </script>
