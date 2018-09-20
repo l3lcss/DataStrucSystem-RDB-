@@ -109,7 +109,7 @@ export default {
       const userData = this.getUserLogin
       this.userDetails = taData.schedules.map((time) => {
         let schedules = {}
-        if (userData.hasOwnProperty('schedule') && userData.schedule.TA === '11' && userData.schedule.time === time.time && userData['.key'] === time.ID) {
+        if (userData.schedule.TA === '11' && userData.schedule.time === time.time && userData['.key'] === time.ID) {
           schedules = {
             ...time,
             nativeValue: true
@@ -136,7 +136,7 @@ export default {
   },
   watch: {
     async getTADetails () {
-      // await this.initData()
+      await this.initData()
     }
   }
 }
