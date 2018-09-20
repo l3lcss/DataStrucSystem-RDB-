@@ -1,30 +1,44 @@
 <template>
-  <div class="hello">
-    {{ getStudents }} students <br>
-    {{ getUserLogin }} userLogin
+  <div>
+    <b-loading :is-full-page="true" :active.sync="getIsLoading"></b-loading>
+    <div class="columns is-mobile is-centered header">
+      <div class="column is-10 load is-size-5 has-text-weight-bold">
+        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="TITLE">TITLE</div>
+      </div>
+    </div>
+    <div class="columns is-mobile is-centered">
+      <div class="column is-12 load">
+        <carousel :perPage="1" paginationActiveColor="#c9788c" paginationColor="#fff">
+          <slide>
+            <TA1 />
+          </slide>
+        </carousel>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import db from '@/config/firebase'
-import { mapGetters } from 'vuex'
-var stdRef = db.ref('students')
-
+import { mapGetters, mapActions } from 'vuex'
+import { Carousel, Slide } from 'vue-carousel'
+import TA1 from './TA1'
 export default {
   name: 'Schedules',
   computed: {
     ...mapGetters([
-      'getStudents',
-      'getUserLogin'
+      'getUserLogin',
+      'getIsLoading'
     ])
   },
-  created () {
-    this.$store.dispatch('setStdRef', stdRef)
+  components: {
+    Carousel,
+    Slide,
+    TA1
   },
-  watch: {
-    students (val) {
-      console.log(val, 'watched')
-    }
+  methods: {
+    ...mapActions([
+      'setIsLoading'
+    ])
   }
 }
 </script>
