@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import db from '@/config/firebase'
 import ScrollReveal from 'scrollreveal'
 import ModalSetPass from './ModalSetPass'
 import { mapActions, mapGetters } from 'vuex'
@@ -68,14 +67,10 @@ export default {
     }
   },
   async mounted () {
-    ScrollReveal({ reset: true })
     ScrollReveal().reveal('.load1')
     ScrollReveal().reveal('.load2', { delay: 100 })
     ScrollReveal().reveal('.load3', { delay: 200 })
     ScrollReveal().reveal('.load4', { delay: 300 })
-    this.setIsLoading(true)
-    await this.setTADetails(db.ref('ta'))
-    this.setIsLoading(false)
   },
   components: {
     ModalSetPass

@@ -55,28 +55,26 @@ export default {
     return new Promise((resolve, reject) => {
       const taRef = db.ref(`ta/${params.TA}`)
       const stdRef = db.ref(`students/${userLogin['.key']}`)
-      taRef.once('value', (data) => {
-        let taVal = data.val()
+      taRef.transaction(taVal => {
         const index = taVal.schedules.findIndex(obj => obj.time === params.time)
         if (params.status) {
           if (taVal.schedules[index].ID) {
             resolve(false)
           } else {
-            stdRef.update({
-              schedule: {
-                TA: params.TA,
-                time: params.time
-              }
-            })
             taVal.schedules[index] = {
               ID: userLogin['.key'],
               name: userLogin.name,
               time: params.time
             }
-
             taRef.update({ schedules: taVal.schedules })
-            resolve(true)
           }
+          stdRef.update({
+            schedule: {
+              TA: params.TA,
+              time: params.time
+            }
+          })
+          resolve(true)
         } else {
           taVal.schedules[index] = {
             time: params.time
@@ -89,6 +87,27 @@ export default {
             }
           })
           resolve(true)
+        }
+      })
+    })
+  },
+  initData (userLogin) {
+    return new Promise((resolve, reject) => {
+      const stdRef = db.ref(`students/${userLogin['.key']}`)
+      stdRef.once('value').then((stdData) => {
+        if (stdData.val().schedule.TA) {
+          const taRef = db.ref(`ta/${stdData.val().schedule.TA}`)
+          taRef.once('value', (taData) => {
+            const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
+            if (index === -1) {
+              stdRef.update({
+                schedule: {
+                  TA: '',
+                  time: ''
+                }
+              })
+            }
+          })
         }
       })
     })

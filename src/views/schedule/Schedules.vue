@@ -12,6 +12,9 @@
           <slide>
             <TA1 />
           </slide>
+          <slide>
+            <TA2 />
+          </slide>
         </carousel>
       </div>
     </div>
@@ -22,6 +25,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { Carousel, Slide } from 'vue-carousel'
 import TA1 from './TA1'
+import TA2 from './TA2'
 export default {
   name: 'Schedules',
   computed: {
@@ -33,12 +37,16 @@ export default {
   components: {
     Carousel,
     Slide,
-    TA1
+    TA1,
+    TA2
   },
   methods: {
     ...mapActions([
-      'setIsLoading'
+      'initData'
     ])
+  },
+  async mounted () {
+    await this.initData()
   }
 }
 </script>

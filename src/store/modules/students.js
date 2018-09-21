@@ -19,6 +19,11 @@ const actions = {
   }),
   setPassword (_, params) {
     firebaseFunc.setPassword(params)
+  },
+  initData ({ getters }) {
+    return firebaseFunc.initData(getters.getUserLogin).then(res => {
+      return res
+    })
   }
 }
 const getters = {
