@@ -18,6 +18,33 @@
         </carousel>
       </div>
     </div>
+    <v-speed-dial
+      v-model="fab"
+      :top="true"
+      :right="true"
+      :fixed="true"
+      direction="bottom"
+      slot="activator"
+    >
+      <v-btn
+        slot="activator"
+        v-model="fab"
+        color="blue darken-2"
+        dark
+        fab
+        :icon="true"
+      >
+        <v-icon>account_circle</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        color="red"
+        @click="logOut()"
+      >
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
+    </v-speed-dial>
   </div>
 </template>
 
@@ -28,6 +55,11 @@ import TA1 from './TA1'
 import TA2 from './TA2'
 export default {
   name: 'Schedules',
+  data () {
+    return {
+      fab: false
+    }
+  },
   computed: {
     ...mapGetters([
       'getUserLogin',
@@ -43,10 +75,17 @@ export default {
   methods: {
     ...mapActions([
       'initData'
-    ])
+    ]),
+    logOut () {
+      this.$router.push({ name: 'Home' })
+    }
   },
   async mounted () {
-    await this.initData()
+    if (Object.keys(this.getUserLogin).length === 0) {
+      this.$router.push({ name: 'Home' })
+    } else {
+      await this.initData()
+    }
   }
 }
 </script>

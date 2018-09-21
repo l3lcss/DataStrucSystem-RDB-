@@ -106,6 +106,7 @@ export default {
                   time: ''
                 }
               })
+              resolve(true)
             }
           })
         }
