@@ -79,7 +79,8 @@ export default {
     ...mapActions([
       'setIsLoading',
       'verifyUserLogin',
-      'setTADetails'
+      'setTADetails',
+      'setAuthentication'
     ]),
     async Login () {
       this.setIsLoading(true)
@@ -96,6 +97,7 @@ export default {
           this.$router.push({ name: 'Admin' })
         } else if (res.success && res.data.identity === 'User') {
           this.$alert(res.message, 'is-success')
+          await this.setAuthentication()
           this.$router.push({ name: 'Schedules' })
         } else {
           this.$alert(res.message, 'is-danger')

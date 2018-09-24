@@ -24,6 +24,12 @@ const actions = {
     return firebaseFunc.initData(getters.getUserLogin).then(res => {
       return res
     })
+  },
+  async setAuthentication ({ getters }) {
+    await firebaseFunc.setAuthentication(getters.getUserLogin)
+  },
+  async firebaseLogout (_) {
+    await firebaseFunc.firebaseLogout()
   }
 }
 const getters = {

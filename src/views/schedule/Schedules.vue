@@ -99,9 +99,11 @@ export default {
   },
   methods: {
     ...mapActions([
-      'initData'
+      'initData',
+      'firebaseLogout'
     ]),
-    logOut () {
+    async logOut () {
+      await this.firebaseLogout()
       this.$router.push({ name: 'Home' })
     },
     changePassword () {

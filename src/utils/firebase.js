@@ -1,4 +1,6 @@
 import db from '@/config/firebase'
+import firebase from '@firebase/app'
+import '@firebase/auth'
 
 export default {
   verifyUserLogin (params) {
@@ -111,6 +113,20 @@ export default {
           })
         }
       })
+    })
+  },
+  async setAuthentication (userLogin) {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(userLogin['.key'] + '@email.com', userLogin.password)
+    } catch (error) {
+      console.log(error.message)
+    }
+  },
+  async firebaseLogout () {
+    await firebase.auth().signOut().then(() => {
+      console.log('Sign-out successful.')
+    }).catch((error) => {
+      console.log('An error happened.', error.message)
     })
   }
 }
