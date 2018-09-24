@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="columns is-centered">
-      <div class="column is-4" style="margin: auto;text-align:center">
-        <img src="../../assets/1.png" width="30%">
+      <div class="column is-4" style="margin: auto;">
+        <img src="../../assets/ta.png">
       </div>
 
       <div class="column is-8">
@@ -28,7 +28,7 @@
                     </b-radio-button>
                   </b-field>
                 </td>
-                <td v-else-if="(getUserLogin.schedule.time !== schedule.time && (getUserLogin.schedule.TA !== '' && getUserLogin.schedule.TA)) || (getUserLogin.schedule.TA !== '11' && getUserLogin.schedule.TA !== '')">
+                <td v-else-if="(getUserLogin.schedule.time !== schedule.time && (getUserLogin.schedule.TA !== '' && getUserLogin.schedule.TA)) || (getUserLogin.schedule.TA !== '55' && getUserLogin.schedule.TA !== '')">
                   <b-field>
                     <b-radio-button
                       disabled
@@ -49,7 +49,7 @@
                     </b-radio-button>
                   </b-field>
                 </td>
-                <td v-else-if="!getUserLogin.schedule.TA || getUserLogin.schedule.TA === '11'">
+                <td v-else-if="!getUserLogin.schedule.TA || getUserLogin.schedule.TA === '55'">
                   <b-field>
                     <b-radio-button
                       v-model="schedule.nativeValue"
@@ -82,7 +82,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
-  name: 'TA1',
+  name: 'TA5',
   data () {
     return {
       userDetails: []
@@ -95,21 +95,21 @@ export default {
     ]),
     async reservEventYes (value) {
       this.setIsLoading(true)
-      await this.setReservTime({ time: value, TA: '11', status: true })
+      await this.setReservTime({ time: value, TA: '55', status: true })
       await this.initData()
     },
     async reservEventNo (value) {
       this.setIsLoading(true)
-      await this.setReservTime({ time: value, TA: '11', status: false })
+      await this.setReservTime({ time: value, TA: '55', status: false })
       await this.initData()
     },
     async initData () {
       this.setIsLoading(true)
-      const taData = this.getTADetails[0]
+      const taData = this.getTADetails[4]
       const userData = this.getUserLogin
       this.userDetails = taData.schedules.map((time) => {
         let schedules = {}
-        if (userData.schedule.TA === '11' && userData.schedule.time === time.time && userData['.key'] === time.ID) {
+        if (userData.schedule.TA === '55' && userData.schedule.time === time.time && userData['.key'] === time.ID) {
           schedules = {
             ...time,
             nativeValue: true

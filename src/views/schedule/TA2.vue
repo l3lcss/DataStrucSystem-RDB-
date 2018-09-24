@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="columns is-centered">
-      <div class="column is-4" style="margin: auto;">
-        <img src="../../assets/ta.png">
+      <div class="column is-4" style="margin: auto;text-align:center">
+        <img src="../../assets/2.png" width="50%">
       </div>
 
       <div class="column is-8">
@@ -144,14 +144,10 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Kanit');
-.imgA {
-  border: 1px solid red;
-  width: 30%;
-}
 .table {
   font-family: 'Kanit', sans-serif;
 }
-th,td {
+.table thead td, .table thead th {
    text-align:center;
 }
 .control {
