@@ -148,7 +148,7 @@ export default {
   font-family: 'Kanit', sans-serif;
   text-align:center;
 }
-.table thead td, .table thead th {
+table td, table th {
   text-align:center;
 }
 .tableHead {
