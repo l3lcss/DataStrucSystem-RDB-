@@ -146,11 +146,9 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Kanit');
 .table {
   font-family: 'Kanit', sans-serif;
+  text-align:center;
 }
 .table thead td, .table thead th {
-   text-align:center;
-}
-.control {
   text-align:center;
 }
 .tableHead {

@@ -48,6 +48,16 @@
       <v-btn
         fab
         dark
+        large
+        color="teal darken-1"
+        @click="changePassword()"
+      >
+        <v-icon>mdi-circle-edit-outline</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        large
         color="red"
         @click="logOut()"
       >
@@ -93,6 +103,9 @@ export default {
     ]),
     logOut () {
       this.$router.push({ name: 'Home' })
+    },
+    changePassword () {
+      console.log('changePassword')
     }
   },
   async mounted () {
