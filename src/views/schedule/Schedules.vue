@@ -100,7 +100,8 @@ export default {
   methods: {
     ...mapActions([
       'initData',
-      'firebaseLogout'
+      'firebaseLogout',
+      'setIsLoading'
     ]),
     async logOut () {
       await this.firebaseLogout()
@@ -112,6 +113,7 @@ export default {
   },
   async mounted () {
     if (Object.keys(this.getUserLogin).length === 0) {
+      this.setIsLoading(false)
       this.$router.push({ name: 'Home' })
     } else {
       await this.initData()
