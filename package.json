@@ -11,7 +11,7 @@
     "buefy": "^0.6.7",
     "firebase": "^5.5.0",
     "material-design-icons-iconfont": "^3.0.3",
-    "scrollreveal": "^4.0.2",
+    "scrollreveal": "^4.0.4",
     "vue": "^2.5.17",
     "vue-carousel": "^0.14.0",
     "vue-router": "^3.0.1",
