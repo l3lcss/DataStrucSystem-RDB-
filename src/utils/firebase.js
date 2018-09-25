@@ -48,9 +48,31 @@ export default {
     })
   },
   setPassword (params) {
-    db.ref(`students/${params.id}`).update({
-      FIRST_LOGIN: 0,
-      password: params.pass
+    return new Promise((resolve, reject) => {
+      if (params.isChangePass) {
+        let user = firebase.auth().currentUser
+        user.updatePassword(params.pass).then(() => {
+          db.ref(`students/${params.id}`).update({
+            FIRST_LOGIN: 0,
+            password: params.pass
+          })
+          resolve('update password successful.')
+        }).catch((error) => {
+          console.log(error, 'updatePassword')
+          reject(error)
+        })
+      } else {
+        firebase.auth().createUserWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
+          db.ref(`students/${params.id}`).update({
+            FIRST_LOGIN: 0,
+            password: params.pass
+          })
+          resolve('set password successful.')
+        }).catch((error) => {
+          console.log(error, 'createUserWithEmailAndPassword')
+          reject(error)
+        })
+      }
     })
   },
   setReservTime (params, userLogin) {
@@ -122,8 +144,8 @@ export default {
       console.log(error.message)
     }
   },
-  async firebaseLogout () {
-    await firebase.auth().signOut().then(() => {
+  firebaseLogout () {
+    firebase.auth().signOut().then(() => {
       console.log('Sign-out successful.')
     }).catch((error) => {
       console.log('An error happened.', error.message)

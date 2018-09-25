@@ -5,6 +5,16 @@
         <p class="modal-card-title">Define your password</p>
       </header>
       <section class="modal-card-body">
+        <b-field label="Old-Password" v-if="isChangePass">
+          <b-input
+            v-model="old_pass"
+            type="password"
+            password-reveal
+            placeholder="Your old password"
+            required>
+          </b-input>
+        </b-field>
+
         <b-field label="Password">
           <b-input
             v-model="pass"
@@ -39,23 +49,32 @@ export default {
   name: 'ModalSetPass',
   data () {
     return {
+      old_pass: '',
       pass: '',
       re_pass: ''
     }
   },
+  props: ['isChangePass'],
   methods: {
     ...mapActions([
       'setPassword'
     ]),
     async setPass () {
-      if (this.pass === this.re_pass && this.pass && this.re_pass) {
+      if ((this.pass === this.re_pass && this.pass && this.re_pass) && (this.old_pass === this.getUserLogin.password || !this.isChangePass)) {
         const params = {
           id: this.getUserLogin['.key'],
-          pass: this.pass
+          pass: this.pass,
+          isChangePass: this.isChangePass
         }
-        this.setPassword(params)
-        this.$alert('set password successfully.', 'is-success')
-        this.$parent.close()
+        let res = await this.setPassword(params)
+        if (res.success) {
+          this.$alert('set password successfully.', 'is-success')
+          this.$parent.close()
+        } else {
+          this.$alert(`set password failed ${res.err}.`, 'is-danger')
+        }
+      } else if (this.old_pass !== this.getUserLogin.password) {
+        this.$alert('รหัสผ่านไม่ตรงกันกับ รหัสผ่านเดิม!!', 'is-danger')
       } else {
         this.$alert('รหัสผ่านไม่เหมือนกัน หรือยังไม่ได้กรอกรหัสผ่าน!!', 'is-danger')
       }

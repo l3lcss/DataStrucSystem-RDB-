@@ -18,7 +18,17 @@ const actions = {
     bindFirebaseRef('userLogin', ref)
   }),
   setPassword (_, params) {
-    firebaseFunc.setPassword(params)
+    return firebaseFunc.setPassword(params).then(res => {
+      return {
+        res,
+        success: 1
+      }
+    }).catch(err => {
+      return {
+        err,
+        success: 0
+      }
+    })
   },
   initData ({ getters }) {
     return firebaseFunc.initData(getters.getUserLogin).then(res => {

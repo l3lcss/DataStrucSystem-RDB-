@@ -64,12 +64,16 @@
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-speed-dial>
+    <b-modal :active.sync="isComponentModalActive">
+      <modal-set-pass :isChangePass="true" />
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Carousel, Slide } from 'vue-carousel'
+import ModalSetPass from '../ModalSetPass'
 import TA1 from './TA1'
 import TA2 from './TA2'
 import TA3 from './TA3'
@@ -79,7 +83,8 @@ export default {
   name: 'Schedules',
   data () {
     return {
-      fab: false
+      fab: false,
+      isComponentModalActive: false
     }
   },
   computed: {
@@ -95,7 +100,8 @@ export default {
     TA2,
     TA3,
     TA4,
-    TA5
+    TA5,
+    ModalSetPass
   },
   methods: {
     ...mapActions([
@@ -108,7 +114,7 @@ export default {
       this.$router.push({ name: 'Home' })
     },
     changePassword () {
-      console.log('changePassword')
+      this.isComponentModalActive = true
     }
   },
   async mounted () {
