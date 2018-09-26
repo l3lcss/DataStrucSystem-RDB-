@@ -11,9 +11,9 @@
         <div class="column is-8 load2">
           <b-field>
             <b-input placeholder="USERNAME"
-                icon="account"
-                autocomplete="off"
-                v-model="studentID">
+              icon="account"
+              autocomplete="off"
+              v-model="studentID">
             </b-input>
           </b-field>
         </div>

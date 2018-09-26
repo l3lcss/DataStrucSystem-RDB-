@@ -150,6 +150,8 @@ export default {
 }
 table td, table th {
   text-align:center;
+  font-size: 0.7rem;
+  vertical-align: middle;
 }
 .tableHead {
   font-family: 'Kanit', sans-serif;
