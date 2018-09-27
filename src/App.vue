@@ -1,11 +1,12 @@
 <template>
   <div id="app">
+    <b-loading :is-full-page="true" :active.sync="getIsLoading"></b-loading>
     <router-view/>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import db from '@/config/firebase'
 export default {
   name: 'App',
@@ -14,6 +15,11 @@ export default {
       'setIsLoading',
       'setTADetails',
       'firebaseLogout'
+    ])
+  },
+  computed: {
+    ...mapGetters([
+      'getIsLoading'
     ])
   },
   async mounted () {

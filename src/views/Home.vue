@@ -1,7 +1,6 @@
 <template>
   <div class="columns is-mobile is-centered">
     <div class="column">
-      <b-loading :is-full-page="true" :active.sync="getIsLoading"></b-loading>
       <div class="columns is-mobile is-centered ">
         <div class="column is-8">
           <div class="glitch load1 " data-text="BLACKPINK" style="color:white;margin-bottom:1vh;">BLACKPINK</div>
@@ -109,7 +108,6 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getIsLoading',
       'getUserLogin'
     ])
   }
