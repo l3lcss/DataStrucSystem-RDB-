@@ -61,7 +61,6 @@ export default {
             prepareResults = verifyLogin(data.val(), params, taRef)
           })
         }
-        console.log(prepareResults, 'prepareResults')
         resolve(prepareResults)
       })
     })

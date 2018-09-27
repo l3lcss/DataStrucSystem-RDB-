@@ -90,7 +90,6 @@ export default {
           pass: this.password
         }
         const res = await this.verifyUserLogin(params)
-        console.log(res, 'res Home.vue')
         if (res.success && res.data.FIRST_LOGIN) {
           this.isComponentModalActive = true
         } else if (res.success && res.data.identity === 'ta') {
