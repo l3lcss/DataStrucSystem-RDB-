@@ -95,7 +95,7 @@ export default {
         } else if (res.success && res.data.identity === 'Admin') {
           this.$alert(res.message, 'is-success')
           this.$router.push({ name: 'Admin' })
-        } else if (res.success && res.data.identity === 'User') {
+        } else if (res.success && res.data.identity === 'student') {
           this.$alert(res.message, 'is-success')
           await this.setAuthentication()
           this.$router.push({ name: 'Schedules' })
