@@ -27,53 +27,14 @@
         </carousel>
       </div>
     </div>
-    <v-speed-dial
-      v-model="fab"
-      :top="true"
-      :right="true"
-      :fixed="true"
-      direction="bottom"
-      slot="activator"
-    >
-      <v-btn
-        slot="activator"
-        v-model="fab"
-        color="blue darken-2"
-        dark
-        fab
-        :icon="true"
-      >
-        <v-icon>account_circle</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        large
-        color="teal darken-1"
-        @click="changePassword()"
-      >
-        <v-icon>mdi-circle-edit-outline</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        large
-        color="red"
-        @click="logOut()"
-      >
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
-    </v-speed-dial>
-    <b-modal :active.sync="isComponentModalActive">
-      <modal-set-pass :isChangePass="true" />
-    </b-modal>
+    <fab-menu />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Carousel, Slide } from 'vue-carousel'
-import ModalSetPass from '../ModalSetPass'
+import fabMenu from '../fabMenu'
 import TA1 from './TA1'
 import TA2 from './TA2'
 import TA3 from './TA3'
@@ -81,12 +42,6 @@ import TA4 from './TA4'
 import TA5 from './TA5'
 export default {
   name: 'Schedules',
-  data () {
-    return {
-      fab: false,
-      isComponentModalActive: false
-    }
-  },
   computed: {
     ...mapGetters([
       'getUserLogin',
@@ -101,21 +56,13 @@ export default {
     TA3,
     TA4,
     TA5,
-    ModalSetPass
+    fabMenu
   },
   methods: {
     ...mapActions([
       'initData',
-      'firebaseLogout',
       'setIsLoading'
-    ]),
-    async logOut () {
-      await this.firebaseLogout()
-      this.$router.push({ name: 'Home' })
-    },
-    changePassword () {
-      this.isComponentModalActive = true
-    }
+    ])
   },
   async mounted () {
     if (Object.keys(this.getUserLogin).length === 0) {
