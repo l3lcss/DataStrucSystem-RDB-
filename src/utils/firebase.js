@@ -2,47 +2,60 @@ import db from '@/config/firebase'
 import firebase from '@firebase/app'
 import '@firebase/auth'
 
+function verifyLogin (data, params, userRef) {
+  let prepareResults = {}
+  if (data) {
+    if (data.FIRST_LOGIN) {
+      prepareResults = {
+        success: 1,
+        message: 'Student is First Login.',
+        data: {
+          ...data,
+          userRef
+        }
+      }
+    } else if (params.pass === data.password) {
+      prepareResults = {
+        success: 1,
+        message: `Welcome <b>${params.id}</b> EIEI :)`,
+        data: {
+          ...data,
+          userRef
+        }
+      }
+    } else {
+      prepareResults = {
+        success: 0,
+        message: 'Invalid password.',
+        data: {
+          ...data,
+          userRef
+        }
+      }
+    }
+  } else {
+    prepareResults = {
+      success: 0,
+      message: `haven't Username <b>${params.id}</b>`
+    }
+  }
+  return prepareResults
+}
 export default {
   verifyUserLogin (params) {
     return new Promise((resolve, reject) => {
       let prepareResults = {}
-      const userRef = db.ref(`students/${params.id}`)
-      userRef.on('value', (data) => {
-        if (data.val()) {
-          if (data.val().FIRST_LOGIN) {
-            prepareResults = {
-              success: 1,
-              message: 'Student is First Login.',
-              data: {
-                ...data.val(),
-                userRef
-              }
-            }
-          } else if (params.pass === data.val().password) {
-            prepareResults = {
-              success: 1,
-              message: `Welcome <b>${params.id}</b> EIEI :)`,
-              data: {
-                ...data.val(),
-                userRef
-              }
-            }
-          } else {
-            prepareResults = {
-              success: 0,
-              message: 'Invalid password.',
-              data: {
-                ...data.val(),
-                userRef
-              }
-            }
-          }
+      const stdRef = db.ref(`students/${params.id}`)
+      const taRef = db.ref(`ta/${params.id}`)
+      stdRef.on('value', (data) => {
+        if (data.exists()) {
+          prepareResults = verifyLogin(data.val(), params, stdRef)
         } else {
-          prepareResults = {
-            success: 0,
-            message: `haven't Username <b>${params.id}</b>`
-          }
+          taRef.on('value', (data) => {
+            prepareResults = verifyLogin(data.val(), params, taRef)
+          })
         }
+        console.log(prepareResults, 'prepareResults')
         resolve(prepareResults)
       })
     })
@@ -138,6 +151,7 @@ export default {
     })
   },
   async setAuthentication (userLogin) {
+    console.log(userLogin, 'userLogin')
     try {
       await firebase.auth().signInWithEmailAndPassword(userLogin['.key'] + '@email.com', userLogin.password)
     } catch (error) {
