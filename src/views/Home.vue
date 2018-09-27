@@ -93,9 +93,10 @@ export default {
         console.log(res, 'res Home.vue')
         if (res.success && res.data.FIRST_LOGIN) {
           this.isComponentModalActive = true
-        } else if (res.success && res.data.identity === 'Admin') {
+        } else if (res.success && res.data.identity === 'ta') {
           this.$alert(res.message, 'is-success')
-          this.$router.push({ name: 'Admin' })
+          await this.setAuthentication()
+          this.$router.push({ name: 'TAschedule' })
         } else if (res.success && res.data.identity === 'student') {
           this.$alert(res.message, 'is-success')
           await this.setAuthentication()

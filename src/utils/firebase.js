@@ -41,6 +41,12 @@ function verifyLogin (data, params, userRef) {
   }
   return prepareResults
 }
+function updatePassword (params) {
+  db.ref(`${params.identity}/${params.id}`).update({
+    FIRST_LOGIN: 0,
+    password: params.pass
+  })
+}
 export default {
   verifyUserLogin (params) {
     return new Promise((resolve, reject) => {
@@ -65,10 +71,7 @@ export default {
       if (params.isChangePass) {
         let user = firebase.auth().currentUser
         user.updatePassword(params.pass).then(() => {
-          db.ref(`students/${params.id}`).update({
-            FIRST_LOGIN: 0,
-            password: params.pass
-          })
+          updatePassword(params)
           resolve('update password successful.')
         }).catch((error) => {
           console.log(error, 'updatePassword')
@@ -76,10 +79,7 @@ export default {
         })
       } else {
         firebase.auth().createUserWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
-          db.ref(`students/${params.id}`).update({
-            FIRST_LOGIN: 0,
-            password: params.pass
-          })
+          updatePassword(params)
           resolve('set password successful.')
         }).catch((error) => {
           console.log(error, 'createUserWithEmailAndPassword')
@@ -151,7 +151,6 @@ export default {
     })
   },
   async setAuthentication (userLogin) {
-    console.log(userLogin, 'userLogin')
     try {
       await firebase.auth().signInWithEmailAndPassword(userLogin['.key'] + '@email.com', userLogin.password)
     } catch (error) {

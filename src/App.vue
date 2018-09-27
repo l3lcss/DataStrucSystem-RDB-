@@ -12,12 +12,14 @@ export default {
   methods: {
     ...mapActions([
       'setIsLoading',
-      'setTADetails'
+      'setTADetails',
+      'firebaseLogout'
     ])
   },
   async mounted () {
     this.setIsLoading(true)
     await this.setTADetails(db.ref('ta'))
+    await this.firebaseLogout()
     this.setIsLoading(false)
   }
 }

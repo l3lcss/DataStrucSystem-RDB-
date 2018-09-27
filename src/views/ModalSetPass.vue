@@ -57,14 +57,17 @@ export default {
   props: ['isChangePass'],
   methods: {
     ...mapActions([
-      'setPassword'
+      'setPassword',
+      'setIsLoading'
     ]),
     async setPass () {
+      this.setIsLoading(true)
       if ((this.pass === this.re_pass && this.pass && this.re_pass) && (this.old_pass === this.getUserLogin.password || !this.isChangePass)) {
         const params = {
           id: this.getUserLogin['.key'],
           pass: this.pass,
-          isChangePass: this.isChangePass
+          isChangePass: this.isChangePass,
+          identity: this.getUserLogin.identity
         }
         let res = await this.setPassword(params)
         if (res.success) {
@@ -78,6 +81,7 @@ export default {
       } else {
         this.$alert('รหัสผ่านไม่เหมือนกัน หรือยังไม่ได้กรอกรหัสผ่าน!!', 'is-danger')
       }
+      this.setIsLoading(false)
     }
   },
   computed: {
