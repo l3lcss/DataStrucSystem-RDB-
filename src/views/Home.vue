@@ -25,8 +25,7 @@
               pack="fas"
               icon="lock-open"
               autocomplete="off"
-              v-model="password"
-              password-reveal>
+              v-model="password">
             </b-input>
           </b-field>
         </div>

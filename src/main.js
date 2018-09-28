@@ -22,11 +22,14 @@ Vue.prototype.$alert = (message, type) => {
   })
 }
 
-Vue.prototype.$dialogAlert = (type, title, message) => {
+Vue.prototype.$dialogConfirm = (type, title, message, confirmText, onConfirm) => {
   Vue.prototype.$dialog.confirm({
     type,
     title,
-    message
+    message,
+    confirmText,
+    hasIcon: true,
+    onConfirm
   })
 }
 

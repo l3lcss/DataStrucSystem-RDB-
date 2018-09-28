@@ -52,22 +52,31 @@ export default {
   methods: {
     ...mapActions([
       'firebaseLogout',
-      'changePassword'
+      'changePassword',
+      'setIsLoading'
     ]),
     async logOut () {
       await this.firebaseLogout()
       this.$router.push({ name: 'Home' })
     },
-    async changePass () {
-      console.log('changePass()')
+    changePass () {
+      this.$dialogConfirm(
+        'is-info',
+        'RESET PASSWORD',
+        `We will send a password reset email to <strong>${this.getUserLogin['.key']}@gmail.com</strong>`,
+        'Send Email',
+        () => this.sendEamil()
+      )
+    },
+    async sendEamil () {
+      this.setIsLoading(true)
       let res = await this.changePassword(this.getUserLogin)
-      console.log(res, 'res')
       if (res.success) {
-        this.$alert(`send reset password success, ${res.res}`, 'is-success')
+        this.$alert(`send reset password success`, 'is-success')
       } else {
         this.$alert(`send reset password failed, ${res.err}.`, 'is-danger')
       }
-      console.log('change Pass')
+      this.setIsLoading(false)
     }
   },
   computed: {

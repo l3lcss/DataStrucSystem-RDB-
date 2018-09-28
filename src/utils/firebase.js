@@ -58,25 +58,6 @@ export default {
   },
   setPassword (params) {
     return new Promise((resolve, reject) => {
-      // if (params.isChangePass) {
-      //   firebase.auth().sendPasswordResetEmail(`${params.id}@gmail.com`).then(() => {
-      //     console.log('Email sent.')
-      //     resolve('Email sent.')
-      //   }).catch((error) => {
-      //     console.log(error, 'error')
-      //     reject(error, 'error')
-      //   })
-      //   let user = firebase.auth().currentUser
-      //   user.updatePassword(params.pass).then(() => {
-      //     db.ref(`${params.identity}/${params.id}`).update({
-      //       FIRST_LOGIN: 0
-      //     })
-      //     resolve('update password successful.')
-      //   }).catch((error) => {
-      //     console.log(error, 'updatePassword')
-      //     reject(error)
-      //   })
-      // } else {
       firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
         db.ref(`${params.identity}/${params.id}`).update({
           FIRST_LOGIN: 0
@@ -86,7 +67,6 @@ export default {
         console.log(error, 'createUserWithEmailAndPassword')
         reject(error)
       })
-      // }
     })
   },
   setReservTime (params, userLogin) {
