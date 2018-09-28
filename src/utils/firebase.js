@@ -2,19 +2,19 @@ import db from '@/config/firebase'
 import firebase from '@firebase/app'
 import '@firebase/auth'
 
-function verifyLogin (data, params, userRef) {
+async function verifyLogin (data, params, userRef) {
   let prepareResults = {}
-  if (data) {
-    if (data.FIRST_LOGIN) {
-      prepareResults = {
-        success: 1,
-        message: 'Student is First Login.',
-        data: {
-          ...data,
-          userRef
-        }
+  if (data && data.FIRST_LOGIN) {
+    prepareResults = {
+      success: 1,
+      message: 'Student is First Login.',
+      data: {
+        ...data,
+        userRef
       }
-    } else if (params.pass === data.password) {
+    }
+  } else if (data) {
+    await firebase.auth().signInWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
       prepareResults = {
         success: 1,
         message: `Welcome <b>${params.id}</b> EIEI :)`,
@@ -23,16 +23,12 @@ function verifyLogin (data, params, userRef) {
           userRef
         }
       }
-    } else {
+    }).catch(err => {
       prepareResults = {
         success: 0,
-        message: 'Invalid password.',
-        data: {
-          ...data,
-          userRef
-        }
+        message: `logging in failed, ${err}`
       }
-    }
+    })
   } else {
     prepareResults = {
       success: 0,
@@ -41,24 +37,18 @@ function verifyLogin (data, params, userRef) {
   }
   return prepareResults
 }
-function updatePassword (params) {
-  db.ref(`${params.identity}/${params.id}`).update({
-    FIRST_LOGIN: 0,
-    password: params.pass
-  })
-}
 export default {
   verifyUserLogin (params) {
     return new Promise((resolve, reject) => {
       let prepareResults = {}
       const stdRef = db.ref(`students/${params.id}`)
       const taRef = db.ref(`ta/${params.id}`)
-      stdRef.on('value', (data) => {
+      stdRef.on('value', async (data) => {
         if (data.exists()) {
-          prepareResults = verifyLogin(data.val(), params, stdRef)
+          prepareResults = await verifyLogin(data.val(), params, stdRef)
         } else {
-          taRef.on('value', (data) => {
-            prepareResults = verifyLogin(data.val(), params, taRef)
+          taRef.on('value', async (data) => {
+            prepareResults = await verifyLogin(data.val(), params, taRef)
           })
         }
         resolve(prepareResults)
@@ -70,7 +60,9 @@ export default {
       if (params.isChangePass) {
         let user = firebase.auth().currentUser
         user.updatePassword(params.pass).then(() => {
-          updatePassword(params)
+          db.ref(`${params.identity}/${params.id}`).update({
+            FIRST_LOGIN: 0
+          })
           resolve('update password successful.')
         }).catch((error) => {
           console.log(error, 'updatePassword')
@@ -78,7 +70,9 @@ export default {
         })
       } else {
         firebase.auth().createUserWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
-          updatePassword(params)
+          db.ref(`${params.identity}/${params.id}`).update({
+            FIRST_LOGIN: 0
+          })
           resolve('set password successful.')
         }).catch((error) => {
           console.log(error, 'createUserWithEmailAndPassword')

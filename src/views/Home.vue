@@ -93,11 +93,9 @@ export default {
           this.isComponentModalActive = true
         } else if (res.success && res.data.identity === 'ta') {
           this.$alert(res.message, 'is-success')
-          await this.setAuthentication()
           this.$router.push({ name: 'TAschedule' })
-        } else if (res.success && res.data.identity === 'student') {
+        } else if (res.success && res.data.identity === 'students') {
           this.$alert(res.message, 'is-success')
-          await this.setAuthentication()
           this.$router.push({ name: 'Schedules' })
         } else {
           this.$alert(res.message, 'is-danger')
