@@ -35,11 +35,21 @@ const actions = {
       return res
     })
   },
-  async setAuthentication ({ getters }) {
-    await firebaseFunc.setAuthentication(getters.getUserLogin)
-  },
   async firebaseLogout (_) {
     await firebaseFunc.firebaseLogout()
+  },
+  async changePassword (_, params) {
+    return firebaseFunc.changePassword(params).then(res => {
+      return {
+        res,
+        success: 1
+      }
+    }).catch(err => {
+      return {
+        err,
+        success: 0
+      }
+    })
   }
 }
 const getters = {

@@ -14,7 +14,7 @@ async function verifyLogin (data, params, userRef) {
       }
     }
   } else if (data) {
-    await firebase.auth().signInWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
+    await firebase.auth().signInWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
       prepareResults = {
         success: 1,
         message: `Welcome <b>${params.id}</b> EIEI :)`,
@@ -46,39 +46,47 @@ export default {
       stdRef.on('value', async (data) => {
         if (data.exists()) {
           prepareResults = await verifyLogin(data.val(), params, stdRef)
+          resolve(prepareResults)
         } else {
           taRef.on('value', async (data) => {
             prepareResults = await verifyLogin(data.val(), params, taRef)
+            resolve(prepareResults)
           })
         }
-        resolve(prepareResults)
       })
     })
   },
   setPassword (params) {
     return new Promise((resolve, reject) => {
-      if (params.isChangePass) {
-        let user = firebase.auth().currentUser
-        user.updatePassword(params.pass).then(() => {
-          db.ref(`${params.identity}/${params.id}`).update({
-            FIRST_LOGIN: 0
-          })
-          resolve('update password successful.')
-        }).catch((error) => {
-          console.log(error, 'updatePassword')
-          reject(error)
+      // if (params.isChangePass) {
+      //   firebase.auth().sendPasswordResetEmail(`${params.id}@gmail.com`).then(() => {
+      //     console.log('Email sent.')
+      //     resolve('Email sent.')
+      //   }).catch((error) => {
+      //     console.log(error, 'error')
+      //     reject(error, 'error')
+      //   })
+      //   let user = firebase.auth().currentUser
+      //   user.updatePassword(params.pass).then(() => {
+      //     db.ref(`${params.identity}/${params.id}`).update({
+      //       FIRST_LOGIN: 0
+      //     })
+      //     resolve('update password successful.')
+      //   }).catch((error) => {
+      //     console.log(error, 'updatePassword')
+      //     reject(error)
+      //   })
+      // } else {
+      firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
+        db.ref(`${params.identity}/${params.id}`).update({
+          FIRST_LOGIN: 0
         })
-      } else {
-        firebase.auth().createUserWithEmailAndPassword(params.id + '@email.com', params.pass).then(() => {
-          db.ref(`${params.identity}/${params.id}`).update({
-            FIRST_LOGIN: 0
-          })
-          resolve('set password successful.')
-        }).catch((error) => {
-          console.log(error, 'createUserWithEmailAndPassword')
-          reject(error)
-        })
-      }
+        resolve('set password successful.')
+      }).catch((error) => {
+        console.log(error, 'createUserWithEmailAndPassword')
+        reject(error)
+      })
+      // }
     })
   },
   setReservTime (params, userLogin) {
@@ -143,18 +151,22 @@ export default {
       })
     })
   },
-  async setAuthentication (userLogin) {
-    try {
-      await firebase.auth().signInWithEmailAndPassword(userLogin['.key'] + '@email.com', userLogin.password)
-    } catch (error) {
-      console.log(error.message)
-    }
-  },
   firebaseLogout () {
     firebase.auth().signOut().then(() => {
       console.log('Sign-out successful.')
     }).catch((error) => {
       console.log('An error happened.', error.message)
+    })
+  },
+  changePassword (userLogin) {
+    return new Promise((resolve, reject) => {
+      firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`).then(() => {
+        console.log('Email sent.')
+        resolve(`Email sent`)
+      }).catch((error) => {
+        console.log(error, 'error')
+        reject(error, 'error')
+      })
     })
   }
 }

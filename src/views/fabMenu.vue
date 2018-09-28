@@ -23,7 +23,7 @@
         dark
         large
         color="teal darken-1"
-        @click="changePassword()"
+        @click="changePass()"
       >
         <v-icon>mdi-circle-edit-outline</v-icon>
       </v-btn>
@@ -37,37 +37,43 @@
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-speed-dial>
-    <b-modal :active.sync="isComponentModalActive">
-      <modal-set-pass :isChangePass="true" />
-    </b-modal>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import ModalSetPass from './ModalSetPass'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'fabMenu',
   data () {
     return {
-      fab: false,
-      isComponentModalActive: false
+      fab: false
     }
   },
   methods: {
     ...mapActions([
-      'firebaseLogout'
+      'firebaseLogout',
+      'changePassword'
     ]),
     async logOut () {
       await this.firebaseLogout()
       this.$router.push({ name: 'Home' })
     },
-    changePassword () {
-      this.isComponentModalActive = true
+    async changePass () {
+      console.log('changePass()')
+      let res = await this.changePassword(this.getUserLogin)
+      console.log(res, 'res')
+      if (res.success) {
+        this.$alert(`send reset password success, ${res.res}`, 'is-success')
+      } else {
+        this.$alert(`send reset password failed, ${res.err}.`, 'is-danger')
+      }
+      console.log('change Pass')
     }
   },
-  components: {
-    ModalSetPass
+  computed: {
+    ...mapGetters([
+      'getUserLogin'
+    ])
   }
 }
 </script>
