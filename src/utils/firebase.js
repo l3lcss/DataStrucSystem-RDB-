@@ -43,13 +43,13 @@ export default {
       let prepareResults = {}
       const stdRef = db.ref(`students/${params.id}`)
       const taRef = db.ref(`ta/${params.id}`)
-      stdRef.on('value', async (data) => {
+      stdRef.on('value', (data) => {
         if (data.exists()) {
-          prepareResults = await verifyLogin(data.val(), params, stdRef)
+          prepareResults = verifyLogin(data.val(), params, stdRef)
           resolve(prepareResults)
         } else {
-          taRef.on('value', async (data) => {
-            prepareResults = await verifyLogin(data.val(), params, taRef)
+          taRef.on('value', (data) => {
+            prepareResults = verifyLogin(data.val(), params, taRef)
             resolve(prepareResults)
           })
         }

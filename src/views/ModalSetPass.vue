@@ -50,7 +50,7 @@ export default {
     ]),
     async setPass () {
       this.setIsLoading(true)
-      if ((this.pass === this.re_pass && this.pass && this.re_pass)) {
+      if (this.pass === this.re_pass) {
         const params = {
           id: this.getUserLogin['.key'],
           pass: this.pass,
