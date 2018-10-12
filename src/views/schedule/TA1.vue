@@ -95,15 +95,20 @@ export default {
       'solveSchedule'
     ]),
     async reservEventYes (value) {
+      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '11', status: true })
+      await this.solveSchedule()
       await this.initData()
+      this.setIsLoading(false)
     },
     async reservEventNo (value) {
+      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '11', status: false })
+      await this.solveSchedule()
       await this.initData()
+      this.setIsLoading(false)
     },
     async initData () {
-      this.setIsLoading(true)
       const taData = this.getTADetails[0]
       const userData = this.getUserLogin
       this.userDetails = taData.schedules.map((time) => {
@@ -121,7 +126,6 @@ export default {
         }
         return schedules
       })
-      this.setIsLoading(false)
     }
   },
   computed: {
@@ -135,8 +139,10 @@ export default {
   },
   watch: {
     async getTADetails () {
+      this.setIsLoading(true)
       await this.solveSchedule()
       await this.initData()
+      this.setIsLoading(false)
     }
   }
 }

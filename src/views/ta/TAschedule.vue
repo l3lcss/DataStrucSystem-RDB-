@@ -113,7 +113,6 @@ export default {
     ])
   },
   async mounted () {
-    console.log(this.getUserLogin)
     this.srcRef = `../../assets/${this.getUserLogin.anotherName}.png`
     if (Object.keys(this.getUserLogin).length === 0) {
       this.setIsLoading(false)
