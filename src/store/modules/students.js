@@ -30,8 +30,8 @@ const actions = {
       }
     })
   },
-  initData ({ getters }) {
-    return firebaseFunc.initData(getters.getUserLogin).then(res => {
+  solveSchedule ({ getters }) {
+    return firebaseFunc.solveSchedule(getters.getUserLogin, getters.getTADetails).then(res => {
       return res
     })
   },

@@ -2,7 +2,7 @@
   <div>
     <div class="columns is-centered">
       <div class="column is-4" style="margin: auto;">
-        <img src="../../assets/ta.png">
+        <img src="../../assets/TA05.png">
       </div>
 
       <div class="column is-8">
@@ -91,15 +91,14 @@ export default {
   methods: {
     ...mapActions([
       'setReservTime',
-      'setIsLoading'
+      'setIsLoading',
+      'solveSchedule'
     ]),
     async reservEventYes (value) {
-      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '55', status: true })
       await this.initData()
     },
     async reservEventNo (value) {
-      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '55', status: false })
       await this.initData()
     },
@@ -136,6 +135,7 @@ export default {
   },
   watch: {
     async getTADetails () {
+      await this.solveSchedule()
       await this.initData()
     }
   }

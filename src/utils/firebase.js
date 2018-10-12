@@ -109,7 +109,7 @@ export default {
       })
     })
   },
-  initData (userLogin) {
+  solveSchedule (userLogin, TADetails) {
     return new Promise((resolve, reject) => {
       const stdRef = db.ref(`students/${userLogin['.key']}`)
       stdRef.once('value').then((stdData) => {
@@ -125,8 +125,22 @@ export default {
                 }
               })
               resolve(true)
+            } else {
+              resolve(false)
             }
           })
+        } else {
+          TADetails.forEach(obj => {
+            obj.schedules.forEach((schedObj, index) => {
+              if (schedObj.ID === userLogin['.key']) {
+                const IDRef = db.ref(`ta/${obj['.key']}/schedules/${index}/ID`)
+                const nameRef = db.ref(`ta/${obj['.key']}/schedules/${index}/name`)
+                IDRef.remove()
+                nameRef.remove()
+              }
+            })
+          })
+          resolve(false)
         }
       })
     })

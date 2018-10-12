@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      'initData',
+      'solveSchedule',
       'setIsLoading'
     ])
   },
@@ -67,7 +67,7 @@ export default {
       this.setIsLoading(false)
       this.$router.push({ name: 'Home' })
     } else {
-      await this.initData()
+      await this.solveSchedule()
     }
   }
 }
