@@ -5,6 +5,12 @@
 npm install
 ```
 
+## Project Structure
+* **views** container root components for each page (.vue)
+* **store** container for vuex state
+* **config** container for config in project
+* **utils** utility file
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
