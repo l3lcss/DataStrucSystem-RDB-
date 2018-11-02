@@ -2,7 +2,7 @@
   <div>
     <div class="columns is-centered">
       <div class="column is-4" style="margin: auto;text-align:center">
-        <img src="https://media.giphy.com/media/26xiwfSinFQYquqJ2/giphy.gif" width="60%">
+        <img src="../../assets/TA01.gif" width="60%">
       </div>
 
       <div class="column is-8">
@@ -157,5 +157,11 @@ table td, table th {
   font-size: 100%;
   color:#fff;
   padding-bottom: 5%;
+}
+.table thead td, .table thead th {
+  font-size: 1rem;
+}
+.table td, .table th {
+  padding: 0.5em 0.6em;
 }
 </style>

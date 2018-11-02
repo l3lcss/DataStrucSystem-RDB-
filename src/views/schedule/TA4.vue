@@ -2,7 +2,7 @@
   <div>
     <div class="columns is-centered">
       <div class="column is-4" style="margin: auto;text-align:center">
-        <img src="https://media.giphy.com/media/3o6fJeVJSTSXqzwaSk/giphy.gif" width="60%">
+        <img src="../../assets/TA04.gif" width="60%">
       </div>
 
       <div class="column is-8">
