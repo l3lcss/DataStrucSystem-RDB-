@@ -95,18 +95,14 @@ export default {
       'solveSchedule'
     ]),
     async reservEventYes (value) {
-      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '11', status: true })
       await this.solveSchedule()
       await this.initData()
-      this.setIsLoading(false)
     },
     async reservEventNo (value) {
-      this.setIsLoading(true)
       await this.setReservTime({ time: value, TA: '11', status: false })
       await this.solveSchedule()
       await this.initData()
-      this.setIsLoading(false)
     },
     async initData () {
       const taData = this.getTADetails[0]
