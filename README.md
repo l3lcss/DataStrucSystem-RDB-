@@ -1,10 +1,4 @@
-<center>
-
 ![Image of Yaktocat](https://octodex.github.com/images/nyantocat.gif)
-
-
-</center>
-<br><br>
 
 # DataStrucSystem :fire::fire::fire:
 
