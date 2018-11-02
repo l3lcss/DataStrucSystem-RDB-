@@ -2,7 +2,7 @@
   <div>
     <div class="columns is-centered">
       <div class="column is-4" style="margin: auto;text-align:center">
-        <img src="../../assets/TA01.png" width="30%">
+        <img src="https://media.giphy.com/media/26xiwfSinFQYquqJ2/giphy.gif" width="60%">
       </div>
 
       <div class="column is-8">
@@ -91,7 +91,6 @@ export default {
   methods: {
     ...mapActions([
       'setReservTime',
-      'setIsLoading',
       'solveSchedule'
     ]),
     async reservEventYes (value) {
@@ -135,10 +134,8 @@ export default {
   },
   watch: {
     async getTADetails () {
-      this.setIsLoading(true)
       await this.solveSchedule()
       await this.initData()
-      this.setIsLoading(false)
     }
   }
 }
