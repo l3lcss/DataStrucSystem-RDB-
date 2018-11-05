@@ -1,12 +1,14 @@
 import { firebaseAction } from 'vuexfire'
 import firebaseFunc from '@/utils/firebase'
 const state = {
-  userLogin: {}
+  userLogin: {},
+  userRef: ''
 }
 const actions = {
-  verifyUserLogin ({ dispatch }, payload) {
+  verifyUserLogin ({ commit, dispatch }, payload) {
     return firebaseFunc.verifyUserLogin(payload).then(res => {
       if (res.success) {
+        commit('SET_USER_REF', res.data.userRef)
         dispatch('setUserLogin', res.data.userRef)
       }
       return res
@@ -35,8 +37,8 @@ const actions = {
       return res
     })
   },
-  async firebaseLogout (_) {
-    await firebaseFunc.firebaseLogout()
+  async firebaseLogout ({ getters }) {
+    await firebaseFunc.firebaseLogout(getters.getUserRef)
   },
   async changePassword (_, params) {
     return firebaseFunc.changePassword(params).then(res => {
@@ -52,11 +54,18 @@ const actions = {
     })
   }
 }
+const mutations = {
+  SET_USER_REF: (state, payload) => {
+    state.userRef = payload
+  }
+}
 const getters = {
-  getUserLogin: state => state.userLogin
+  getUserLogin: state => state.userLogin,
+  getUserRef: state => state.userRef
 }
 export default {
   state,
   actions,
+  mutations,
   getters
 }

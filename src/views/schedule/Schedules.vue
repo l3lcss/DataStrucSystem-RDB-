@@ -31,8 +31,10 @@
 </template>
 
 <script>
+import db from '@/config/firebase'
 import { mapGetters, mapActions } from 'vuex'
 import { Carousel, Slide } from 'vue-carousel'
+import event from '@/utils/event'
 import fabMenu from '../fabMenu'
 import TA1 from './TA1'
 import TA2 from './TA2'
@@ -43,7 +45,8 @@ export default {
   name: 'Schedules',
   computed: {
     ...mapGetters([
-      'getUserLogin'
+      'getUserLogin',
+      'getUserRef'
     ])
   },
   components: {
@@ -68,6 +71,12 @@ export default {
       this.$router.push({ name: 'Home' })
     } else {
       await this.solveSchedule()
+      let userRef = db.ref(this.getUserRef).child('statusActive')
+      let res = await userRef.once('value')
+      db.ref(userRef).update({
+        number: res.val().number + 1
+      })
+      document.addEventListener('visibilitychange', event.listenerVisible)
     }
   }
 }

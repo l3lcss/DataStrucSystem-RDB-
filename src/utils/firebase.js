@@ -145,12 +145,20 @@ export default {
       })
     })
   },
-  firebaseLogout () {
+  async firebaseLogout (userRef) {
     firebase.auth().signOut().then(() => {
       console.log('Sign-out successful.')
     }).catch((error) => {
       console.log('An error happened.', error.message)
     })
+    if (userRef) {
+      let userStatus = userRef.child('statusActive')
+      let res = await userStatus.once('value')
+      db.ref(userStatus).update({
+        number: res.val().number - 1
+      })
+      document.removeEventListener('visibilitychange', event.listenerVisible)
+    }
   },
   changePassword (userLogin) {
     return new Promise((resolve, reject) => {
