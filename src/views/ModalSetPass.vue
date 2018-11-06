@@ -58,10 +58,10 @@ export default {
         }
         let res = await this.setPassword(params)
         if (res.success) {
-          this.$alert('set password successfully.', 'is-success')
+          this.$alert(res.message, 'is-success')
           this.$parent.close()
         } else {
-          this.$alert(`set password failed ${res.err}.`, 'is-danger')
+          this.$alert(`set password failed : ${res.error}.`, 'is-danger')
         }
       } else {
         this.$alert('รหัสผ่านไม่เหมือนกัน หรือยังไม่ได้กรอกรหัสผ่าน!!', 'is-danger')

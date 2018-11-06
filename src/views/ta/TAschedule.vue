@@ -60,7 +60,6 @@ export default {
     ])
   },
   async mounted () {
-    console.log(this.getUserLogin, 'getUserLogin')
     if (Object.keys(this.getUserLogin).length === 0) {
       this.setIsLoading(false)
       this.$router.push({ name: 'Home' })

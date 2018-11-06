@@ -2,7 +2,6 @@ import db from '@/config/firebase'
 import store from '@/store'
 export default {
   async listenerVisible () {
-    console.log(document.visibilityState, 'document.visibilityState ...')
     let userStatus = store.getters.getUserRef.child('statusActive')
     if (document.visibilityState === 'visible') {
       let res2 = await userStatus.once('value')

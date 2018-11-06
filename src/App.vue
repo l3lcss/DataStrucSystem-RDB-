@@ -28,7 +28,7 @@ export default {
   },
   async mounted () {
     this.setIsLoading(true)
-    await this.setTADetails(db.ref('ta'))
+    this.setTADetails(db.ref('ta'))
     let auth = await firebaseFunc.verifyFirebaseLogin()
     if (auth) {
       let param = {
@@ -41,7 +41,6 @@ export default {
       this.setIsVerify(true)
       this.$router.push({ name: 'Home' })
     }
-    console.log('after push ...')
     this.setIsLoading(false)
   }
 }
