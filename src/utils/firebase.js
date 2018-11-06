@@ -161,19 +161,22 @@ export default {
       console.log('An error happened.', error.message)
     }
   },
-  changePassword (userLogin) {
-    return new Promise((resolve, reject) => {
-      firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`).then(() => {
-        console.log('Email sent.')
-        resolve(`Email sent`)
-      }).catch((error) => {
-        console.log(error, 'error')
-        reject(error, 'error')
-      })
-    })
+  async changePassword (userLogin) {
+    try {
+      await firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`)
+      return {
+        message: 'send reset password success.',
+        success: 1
+      }
+    } catch (error) {
+      return {
+        error,
+        success: 0
+      }
+    }
   },
   verifyFirebaseLogin () {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       firebase.auth().onAuthStateChanged((user) => {
         resolve(user)
       })

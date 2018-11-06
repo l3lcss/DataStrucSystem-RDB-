@@ -37,17 +37,8 @@ const actions = {
     await firebaseFunc.firebaseLogout(getters.getUserRef)
   },
   async changePassword (_, params) {
-    return firebaseFunc.changePassword(params).then(res => {
-      return {
-        res,
-        success: 1
-      }
-    }).catch(err => {
-      return {
-        err,
-        success: 0
-      }
-    })
+    let res = await firebaseFunc.changePassword(params)
+    return res
   }
 }
 const mutations = {
