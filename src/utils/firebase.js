@@ -67,18 +67,22 @@ export default {
       })
     })
   },
-  setPassword (params) {
-    return new Promise((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
-        db.ref(`${params.identity}/${params.id}`).update({
-          FIRST_LOGIN: 0
-        })
-        resolve('set password successful.')
-      }).catch((error) => {
-        console.log(error, 'createUserWithEmailAndPassword')
-        reject(error)
+  async setPassword (params) {
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass)
+      await db.ref(`${params.identity}/${params.id}`).update({
+        FIRST_LOGIN: 0
       })
-    })
+      return {
+        success: 1,
+        message: 'set password successful.'
+      }
+    } catch (error) {
+      return {
+        success: 0,
+        error
+      }
+    }
   },
   setReservTime (params, userLogin) {
     return new Promise((resolve, reject) => {
@@ -120,41 +124,33 @@ export default {
       })
     })
   },
-  solveSchedule (userLogin, TADetails) {
-    return new Promise((resolve, reject) => {
-      const stdRef = db.ref(`students/${userLogin['.key']}`)
-      stdRef.once('value').then((stdData) => {
-        if (stdData.val().schedule.TA) {
-          const taRef = db.ref(`ta/${stdData.val().schedule.TA}`)
-          taRef.once('value', (taData) => {
-            const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
-            if (index === -1) {
-              stdRef.update({
-                schedule: {
-                  TA: '',
-                  time: ''
-                }
-              })
-              resolve(true)
-            } else {
-              resolve(false)
-            }
-          })
-        } else {
-          TADetails.forEach(obj => {
-            obj.schedules.forEach((schedObj, index) => {
-              if (schedObj.ID === userLogin['.key']) {
-                const IDRef = db.ref(`ta/${obj['.key']}/schedules/${index}/ID`)
-                const nameRef = db.ref(`ta/${obj['.key']}/schedules/${index}/name`)
-                IDRef.remove()
-                nameRef.remove()
-              }
-            })
-          })
-          resolve(false)
-        }
+  async solveSchedule (userLogin, TADetails) {
+    const stdRef = db.ref(`students/${userLogin['.key']}`)
+    const stdData = await stdRef.once('value')
+    const TAID = stdData.val().schedule.TA
+    if (TAID) {
+      const taData = await db.ref(`ta/${TAID}`).once('value')
+      const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
+      if (index === -1) {
+        await stdRef.update({
+          schedule: {
+            TA: '',
+            time: ''
+          }
+        })
+      }
+    } else {
+      TADetails.forEach(obj => {
+        obj.schedules.forEach((schedObj, index) => {
+          if (schedObj.ID === userLogin['.key']) {
+            const IDRef = db.ref(`ta/${obj['.key']}/schedules/${index}/ID`)
+            const nameRef = db.ref(`ta/${obj['.key']}/schedules/${index}/name`)
+            IDRef.remove()
+            nameRef.remove()
+          }
+        })
       })
-    })
+    }
   },
   async firebaseLogout (userRef) {
     firebase.auth().signOut().then(() => {
@@ -185,7 +181,6 @@ export default {
   verifyFirebaseLogin () {
     return new Promise((resolve, reject) => {
       firebase.auth().onAuthStateChanged((user) => {
-        console.log(user, 'user ...')
         resolve(user)
       })
     })

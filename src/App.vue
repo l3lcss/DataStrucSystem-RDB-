@@ -41,7 +41,6 @@ export default {
       this.setIsVerify(true)
       this.$router.push({ name: 'Home' })
     }
-    console.log('after push ...')
     this.setIsLoading(false)
   }
 }

@@ -10,9 +10,8 @@ const actions = {
     await bindFirebaseRef('TADetails', ref)
   }),
   async setReservTime ({ getters, dispatch }, params) {
-    return firebaseFunc.setReservTime(params, getters.getUserLogin).then(res => {
-      return res
-    })
+    let res = await firebaseFunc.setReservTime(params, getters.getUserLogin)
+    return res
   }
 }
 const getters = {
