@@ -79,45 +79,43 @@ export default {
       }
     }
   },
-  setReservTime (params, userLogin) {
-    return new Promise((resolve, reject) => {
-      const taRef = db.ref(`ta/${params.TA}`)
-      const stdRef = db.ref(`students/${userLogin['.key']}`)
-      taRef.transaction(taVal => {
-        const index = taVal.schedules.findIndex(obj => obj.time === params.time)
-        if (params.status) {
-          if (taVal.schedules[index].ID) {
-            resolve(false)
-          } else {
-            taVal.schedules[index] = {
-              ID: userLogin['.key'],
-              name: userLogin.name,
-              time: params.time
-            }
-            taRef.update({ schedules: taVal.schedules })
-          }
-          stdRef.update({
-            schedule: {
-              TA: params.TA,
-              time: params.time
-            }
-          })
-          resolve(true)
-        } else {
-          taVal.schedules[index] = {
-            time: params.time
-          }
-          taRef.update({ schedules: taVal.schedules })
-          stdRef.update({
-            schedule: {
-              TA: '',
-              time: ''
-            }
-          })
-          resolve(true)
+  async setReservTime (params, userLogin) {
+    const taRef = db.ref(`ta/${params.TA}`)
+    const stdRef = db.ref(`students/${userLogin['.key']}`)
+    let taGet = await taRef.once('value')
+    let taVal = taGet.val()
+    const index = taVal.schedules.findIndex(obj => obj.time === params.time)
+    if (params.status) {
+      if (taVal.schedules[index].ID) {
+        return false
+      } else {
+        taVal.schedules[index] = {
+          ID: userLogin['.key'],
+          name: userLogin.name,
+          time: params.time
+        }
+        taRef.update({ schedules: taVal.schedules })
+      }
+      stdRef.update({
+        schedule: {
+          TA: params.TA,
+          time: params.time
         }
       })
-    })
+      return true
+    } else {
+      taVal.schedules[index] = {
+        time: params.time
+      }
+      taRef.update({ schedules: taVal.schedules })
+      stdRef.update({
+        schedule: {
+          TA: '',
+          time: ''
+        }
+      })
+      return true
+    }
   },
   async solveSchedule (userLogin, TADetails) {
     const stdRef = db.ref(`students/${userLogin['.key']}`)
@@ -127,7 +125,7 @@ export default {
       const taData = await db.ref(`ta/${TAID}`).once('value')
       const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
       if (index === -1) {
-        await stdRef.update({
+        stdRef.update({
           schedule: {
             TA: '',
             time: ''
