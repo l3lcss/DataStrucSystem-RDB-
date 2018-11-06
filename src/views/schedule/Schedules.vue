@@ -77,6 +77,10 @@ export default {
       number: res.val().number + 1
     })
     document.addEventListener('visibilitychange', event.listenerVisible)
+  },
+  created () {
+    console.log('created ...')
+    document.addEventListener('beforeunload', () => { confirm('are you sure?') })
   }
 }
 </script>
