@@ -146,11 +146,6 @@ export default {
     }
   },
   async firebaseLogout (userRef) {
-    firebase.auth().signOut().then(() => {
-      console.log('Sign-out successful.')
-    }).catch((error) => {
-      console.log('An error happened.', error.message)
-    })
     if (userRef) {
       let userStatus = userRef.child('statusActive')
       let res = await userStatus.once('value')
@@ -158,6 +153,12 @@ export default {
         number: res.val().number - 1
       })
       document.removeEventListener('visibilitychange', event.listenerVisible)
+    }
+    try {
+      await firebase.auth().signOut()
+      console.log('Sign-out successful.')
+    } catch (error) {
+      console.log('An error happened.', error.message)
     }
   },
   changePassword (userLogin) {
