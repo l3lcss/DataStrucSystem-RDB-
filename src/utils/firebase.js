@@ -49,23 +49,18 @@ async function verifyLogin (data, params, userRef) {
   return prepareResults
 }
 export default {
-  verifyUserLogin (params) {
-    return new Promise((resolve, reject) => {
-      let prepareResults = {}
-      const stdRef = db.ref(`students/${params.id}`)
-      const taRef = db.ref(`ta/${params.id}`)
-      stdRef.on('value', (data) => {
-        if (data.exists()) {
-          prepareResults = verifyLogin(data.val(), params, stdRef)
-          resolve(prepareResults)
-        } else {
-          taRef.on('value', (data) => {
-            prepareResults = verifyLogin(data.val(), params, taRef)
-            resolve(prepareResults)
-          })
-        }
-      })
-    })
+  async verifyUserLogin (params) {
+    let prepareResults = {}
+    const stdRef = db.ref(`students/${params.id}`)
+    const taRef = db.ref(`ta/${params.id}`)
+    const stdData = await stdRef.once('value')
+    if (stdData.exists()) {
+      prepareResults = verifyLogin(stdData.val(), params, stdRef)
+    } else {
+      const taData = await taRef.once('value')
+      prepareResults = verifyLogin(taData.val(), params, taRef)
+    }
+    return prepareResults
   },
   async setPassword (params) {
     try {

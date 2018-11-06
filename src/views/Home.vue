@@ -77,7 +77,6 @@ export default {
     ...mapActions([
       'setIsLoading',
       'verifyUserLogin',
-      'setTADetails',
       'setIsVerify'
     ]),
     async Login () {

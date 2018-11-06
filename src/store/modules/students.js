@@ -1,5 +1,12 @@
 import { firebaseAction } from 'vuexfire'
 import firebaseFunc from '@/utils/firebase'
+function delay () {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, 500)
+  })
+}
 const state = {
   userLogin: {},
   userRef: ''
@@ -10,12 +17,13 @@ const actions = {
     if (res.success) {
       commit('SET_USER_REF', res.data.userRef)
       dispatch('setUserLogin', res.data.userRef)
+      await delay()
     }
     return res
   },
   setUserLogin: firebaseAction(({
     bindFirebaseRef
-  }, { ref }) => {
+  }, ref) => {
     bindFirebaseRef('userLogin', ref)
   }),
   async setPassword (_, params) {
