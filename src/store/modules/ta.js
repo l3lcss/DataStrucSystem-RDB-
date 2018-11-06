@@ -6,13 +6,11 @@ const state = {
 const actions = {
   setTADetails: firebaseAction(async ({
     bindFirebaseRef
-  }, { ref }) => {
+  }, ref) => {
     await bindFirebaseRef('TADetails', ref)
   }),
-  async setReservTime ({ getters, dispatch }, params) {
-    return firebaseFunc.setReservTime(params, getters.getUserLogin).then(res => {
-      return res
-    })
+  async setReservTime ({ getters }, params) {
+    await firebaseFunc.setReservTime(params, getters.getUserLogin)
   }
 }
 const getters = {

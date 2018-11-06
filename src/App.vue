@@ -1,12 +1,13 @@
 <template>
   <div id="app">
     <b-loading :is-full-page="true" :active.sync="getIsLoading"></b-loading>
-    <router-view/>
+    <router-view v-if="getIsVerify"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import firebaseFunc from '@/utils/firebase'
 import db from '@/config/firebase'
 export default {
   name: 'App',
@@ -14,18 +15,32 @@ export default {
     ...mapActions([
       'setIsLoading',
       'setTADetails',
-      'firebaseLogout'
+      'setIsVerify',
+      'verifyUserLogin'
     ])
   },
   computed: {
     ...mapGetters([
-      'getIsLoading'
+      'getIsLoading',
+      'getTADetails',
+      'getIsVerify'
     ])
   },
   async mounted () {
     this.setIsLoading(true)
-    await this.setTADetails(db.ref('ta'))
-    await this.firebaseLogout()
+    this.setTADetails(db.ref('ta'))
+    let auth = await firebaseFunc.verifyFirebaseLogin()
+    if (auth) {
+      let param = {
+        id: auth.email.split('@')[0]
+      }
+      await this.verifyUserLogin(param)
+      this.setIsVerify(true)
+      this.$router.push({ name: 'Schedules' })
+    } else {
+      this.setIsVerify(true)
+      this.$router.push({ name: 'Home' })
+    }
     this.setIsLoading(false)
   }
 }

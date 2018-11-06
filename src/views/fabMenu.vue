@@ -72,9 +72,10 @@ export default {
       this.setIsLoading(true)
       let res = await this.changePassword(this.getUserLogin)
       if (res.success) {
-        this.$alert(`send reset password success`, 'is-success')
+        this.$alert(res.message, 'is-success')
+        this.$router.push({ name: 'Home' })
       } else {
-        this.$alert(`send reset password failed, ${res.err}.`, 'is-danger')
+        this.$alert(`send reset password failed, ${res.error}.`, 'is-danger')
       }
       this.setIsLoading(false)
     }

@@ -4,6 +4,17 @@ import '@firebase/auth'
 
 async function verifyLogin (data, params, userRef) {
   let prepareResults = {}
+  if (!params.pass) {
+    prepareResults = {
+      success: 1,
+      message: `Welcome <b>${params.id}</b> EIEI :)`,
+      data: {
+        ...data,
+        userRef
+      }
+    }
+    return prepareResults
+  }
   if (data && data.FIRST_LOGIN) {
     prepareResults = {
       success: 1,
@@ -38,119 +49,103 @@ async function verifyLogin (data, params, userRef) {
   return prepareResults
 }
 export default {
-  verifyUserLogin (params) {
-    return new Promise((resolve, reject) => {
-      let prepareResults = {}
-      const stdRef = db.ref(`students/${params.id}`)
-      const taRef = db.ref(`ta/${params.id}`)
-      stdRef.on('value', (data) => {
-        if (data.exists()) {
-          prepareResults = verifyLogin(data.val(), params, stdRef)
-          resolve(prepareResults)
-        } else {
-          taRef.on('value', (data) => {
-            prepareResults = verifyLogin(data.val(), params, taRef)
-            resolve(prepareResults)
-          })
+  async verifyUserLogin (params) {
+    let prepareResults = {}
+    const stdRef = db.ref(`students/${params.id}`)
+    const taRef = db.ref(`ta/${params.id}`)
+    const stdData = await stdRef.once('value')
+    if (stdData.exists()) {
+      prepareResults = verifyLogin(stdData.val(), params, stdRef)
+    } else {
+      const taData = await taRef.once('value')
+      prepareResults = verifyLogin(taData.val(), params, taRef)
+    }
+    return prepareResults
+  },
+  async setPassword (params) {
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass)
+      await db.ref(`${params.identity}/${params.id}`).update({
+        FIRST_LOGIN: 0
+      })
+      return {
+        success: 1,
+        message: 'set password successful.'
+      }
+    } catch (error) {
+      return {
+        success: 0,
+        error
+      }
+    }
+  },
+  async setReservTime (params, userLogin) {
+    const taRef = db.ref(`ta/${params.TA}`)
+    const stdRef = db.ref(`students/${userLogin['.key']}`)
+    let taGet = await taRef.once('value')
+    let taVal = taGet.val()
+    const index = taVal.schedules.findIndex(obj => obj.time === params.time)
+    if (params.status) {
+      if (taVal.schedules[index].ID) {
+        return false
+      } else {
+        taVal.schedules[index] = {
+          ID: userLogin['.key'],
+          name: userLogin.name,
+          time: params.time
+        }
+        taRef.update({ schedules: taVal.schedules })
+      }
+      stdRef.update({
+        schedule: {
+          TA: params.TA,
+          time: params.time
         }
       })
-    })
+      return true
+    } else {
+      taVal.schedules[index] = {
+        time: params.time
+      }
+      taRef.update({ schedules: taVal.schedules })
+      stdRef.update({
+        schedule: {
+          TA: '',
+          time: ''
+        }
+      })
+      return true
+    }
   },
-  setPassword (params) {
-    return new Promise((resolve, reject) => {
-      firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
-        db.ref(`${params.identity}/${params.id}`).update({
-          FIRST_LOGIN: 0
+  async solveSchedule (userLogin, TADetails) {
+    const stdRef = db.ref(`students/${userLogin['.key']}`)
+    const stdData = await stdRef.once('value')
+    const TAID = stdData.val().schedule.TA
+    if (TAID) {
+      const taData = await db.ref(`ta/${TAID}`).once('value')
+      const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
+      if (index === -1) {
+        stdRef.update({
+          schedule: {
+            TA: '',
+            time: ''
+          }
         })
-        resolve('set password successful.')
-      }).catch((error) => {
-        console.log(error, 'createUserWithEmailAndPassword')
-        reject(error)
-      })
-    })
-  },
-  setReservTime (params, userLogin) {
-    return new Promise((resolve, reject) => {
-      const taRef = db.ref(`ta/${params.TA}`)
-      const stdRef = db.ref(`students/${userLogin['.key']}`)
-      taRef.transaction(taVal => {
-        const index = taVal.schedules.findIndex(obj => obj.time === params.time)
-        if (params.status) {
-          if (taVal.schedules[index].ID) {
-            resolve(false)
-          } else {
-            taVal.schedules[index] = {
-              ID: userLogin['.key'],
-              name: userLogin.name,
-              time: params.time
-            }
-            taRef.update({ schedules: taVal.schedules })
+      }
+    } else {
+      TADetails.forEach(obj => {
+        obj.schedules.forEach((schedObj, index) => {
+          if (schedObj.ID === userLogin['.key']) {
+            const IDRef = db.ref(`ta/${obj['.key']}/schedules/${index}/ID`)
+            const nameRef = db.ref(`ta/${obj['.key']}/schedules/${index}/name`)
+            IDRef.remove()
+            nameRef.remove()
           }
-          stdRef.update({
-            schedule: {
-              TA: params.TA,
-              time: params.time
-            }
-          })
-          resolve(true)
-        } else {
-          taVal.schedules[index] = {
-            time: params.time
-          }
-          taRef.update({ schedules: taVal.schedules })
-          stdRef.update({
-            schedule: {
-              TA: '',
-              time: ''
-            }
-          })
-          resolve(true)
-        }
+        })
       })
-    })
-  },
-  solveSchedule (userLogin, TADetails) {
-    return new Promise((resolve, reject) => {
-      const stdRef = db.ref(`students/${userLogin['.key']}`)
-      stdRef.once('value').then((stdData) => {
-        if (stdData.val().schedule.TA) {
-          const taRef = db.ref(`ta/${stdData.val().schedule.TA}`)
-          taRef.once('value', (taData) => {
-            const index = taData.val().schedules.findIndex(obj => obj.ID === userLogin['.key'])
-            if (index === -1) {
-              stdRef.update({
-                schedule: {
-                  TA: '',
-                  time: ''
-                }
-              })
-              resolve(true)
-            } else {
-              resolve(false)
-            }
-          })
-        } else {
-          TADetails.forEach(obj => {
-            obj.schedules.forEach((schedObj, index) => {
-              if (schedObj.ID === userLogin['.key']) {
-                const IDRef = db.ref(`ta/${obj['.key']}/schedules/${index}/ID`)
-                const nameRef = db.ref(`ta/${obj['.key']}/schedules/${index}/name`)
-                IDRef.remove()
-                nameRef.remove()
-              }
-            })
-          })
-          resolve(false)
-        }
-      })
-    })
+    }
   },
   async firebaseLogout (userRef) {
-    firebase.auth().signOut().then(() => {
-      console.log('Sign-out successful.')
-    }).catch((error) => {
-      console.log('An error happened.', error.message)
-    })
     if (userRef) {
       let userStatus = userRef.child('statusActive')
       let res = await userStatus.once('value')
@@ -159,15 +154,31 @@ export default {
       })
       document.removeEventListener('visibilitychange', event.listenerVisible)
     }
+    try {
+      await firebase.auth().signOut()
+      console.log('Sign-out successful.')
+    } catch (error) {
+      console.log('An error happened.', error.message)
+    }
   },
-  changePassword (userLogin) {
-    return new Promise((resolve, reject) => {
-      firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`).then(() => {
-        console.log('Email sent.')
-        resolve(`Email sent`)
-      }).catch((error) => {
-        console.log(error, 'error')
-        reject(error, 'error')
+  async changePassword (userLogin) {
+    try {
+      await firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`)
+      return {
+        message: 'send reset password success.',
+        success: 1
+      }
+    } catch (error) {
+      return {
+        error,
+        success: 0
+      }
+    }
+  },
+  verifyFirebaseLogin () {
+    return new Promise((resolve) => {
+      firebase.auth().onAuthStateChanged((user) => {
+        resolve(user)
       })
     })
   }

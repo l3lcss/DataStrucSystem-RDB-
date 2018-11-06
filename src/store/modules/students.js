@@ -1,57 +1,44 @@
 import { firebaseAction } from 'vuexfire'
 import firebaseFunc from '@/utils/firebase'
+function delay () {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, 500)
+  })
+}
 const state = {
   userLogin: {},
   userRef: ''
 }
 const actions = {
-  verifyUserLogin ({ commit, dispatch }, payload) {
-    return firebaseFunc.verifyUserLogin(payload).then(res => {
-      if (res.success) {
-        commit('SET_USER_REF', res.data.userRef)
-        dispatch('setUserLogin', res.data.userRef)
-      }
-      return res
-    })
+  async verifyUserLogin ({ commit, dispatch }, payload) {
+    let res = await firebaseFunc.verifyUserLogin(payload)
+    if (res.success) {
+      commit('SET_USER_REF', res.data.userRef)
+      dispatch('setUserLogin', res.data.userRef)
+      await delay()
+    }
+    return res
   },
   setUserLogin: firebaseAction(({
     bindFirebaseRef
-  }, { ref }) => {
+  }, ref) => {
     bindFirebaseRef('userLogin', ref)
   }),
-  setPassword (_, params) {
-    return firebaseFunc.setPassword(params).then(res => {
-      return {
-        res,
-        success: 1
-      }
-    }).catch(err => {
-      return {
-        err,
-        success: 0
-      }
-    })
+  async setPassword (_, params) {
+    let res = await firebaseFunc.setPassword(params)
+    return res
   },
-  solveSchedule ({ getters }) {
-    return firebaseFunc.solveSchedule(getters.getUserLogin, getters.getTADetails).then(res => {
-      return res
-    })
+  async solveSchedule ({ getters }) {
+    await firebaseFunc.solveSchedule(getters.getUserLogin, getters.getTADetails)
   },
   async firebaseLogout ({ getters }) {
     await firebaseFunc.firebaseLogout(getters.getUserRef)
   },
   async changePassword (_, params) {
-    return firebaseFunc.changePassword(params).then(res => {
-      return {
-        res,
-        success: 1
-      }
-    }).catch(err => {
-      return {
-        err,
-        success: 0
-      }
-    })
+    let res = await firebaseFunc.changePassword(params)
+    return res
   }
 }
 const mutations = {
