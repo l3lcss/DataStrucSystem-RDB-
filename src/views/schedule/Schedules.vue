@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="getIsVerify">
     <div class="columns is-mobile is-centered header">
       <div class="column is-10 load is-size-5 has-text-weight-bold">
         <div class="glitch load is-mobile" style="color: #ffffff;" data-text="TITLE">TITLE</div>
@@ -46,7 +46,8 @@ export default {
   computed: {
     ...mapGetters([
       'getUserLogin',
-      'getUserRef'
+      'getUserRef',
+      'getIsVerify'
     ])
   },
   components: {
@@ -67,17 +68,15 @@ export default {
   },
   async mounted () {
     if (Object.keys(this.getUserLogin).length === 0) {
-      this.setIsLoading(false)
       this.$router.push({ name: 'Home' })
-    } else {
-      await this.solveSchedule()
-      let userRef = db.ref(this.getUserRef).child('statusActive')
-      let res = await userRef.once('value')
-      db.ref(userRef).update({
-        number: res.val().number + 1
-      })
-      document.addEventListener('visibilitychange', event.listenerVisible)
     }
+    await this.solveSchedule()
+    let userRef = db.ref(this.getUserRef).child('statusActive')
+    let res = await userRef.once('value')
+    db.ref(userRef).update({
+      number: res.val().number + 1
+    })
+    document.addEventListener('visibilitychange', event.listenerVisible)
   }
 }
 </script>

@@ -6,12 +6,13 @@ const state = {
 }
 const actions = {
   verifyUserLogin ({ commit, dispatch }, payload) {
-    return firebaseFunc.verifyUserLogin(payload).then(res => {
+    return new Promise(async (resolve, reject) => {
+      let res = await firebaseFunc.verifyUserLogin(payload)
       if (res.success) {
         commit('SET_USER_REF', res.data.userRef)
         dispatch('setUserLogin', res.data.userRef)
       }
-      return res
+      resolve(res)
     })
   },
   setUserLogin: firebaseAction(({

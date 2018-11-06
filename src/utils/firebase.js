@@ -4,6 +4,17 @@ import '@firebase/auth'
 
 async function verifyLogin (data, params, userRef) {
   let prepareResults = {}
+  if (!params.pass) {
+    prepareResults = {
+      success: 1,
+      message: `Welcome <b>${params.id}</b> EIEI :)`,
+      data: {
+        ...data,
+        userRef
+      }
+    }
+    return prepareResults
+  }
   if (data && data.FIRST_LOGIN) {
     prepareResults = {
       success: 1,
@@ -168,6 +179,14 @@ export default {
       }).catch((error) => {
         console.log(error, 'error')
         reject(error, 'error')
+      })
+    })
+  },
+  verifyFirebaseLogin () {
+    return new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user, 'user ...')
+        resolve(user)
       })
     })
   }

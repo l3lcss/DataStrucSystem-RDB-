@@ -77,7 +77,8 @@ export default {
     ...mapActions([
       'setIsLoading',
       'verifyUserLogin',
-      'setTADetails'
+      'setTADetails',
+      'setIsVerify'
     ]),
     async Login () {
       this.setIsLoading(true)
@@ -92,9 +93,11 @@ export default {
         } else if (res.success && res.data.identity === 'ta') {
           this.$alert(res.message, 'is-success')
           this.$router.push({ name: 'TAschedule' })
+          this.setIsVerify(true)
         } else if (res.success && res.data.identity === 'students') {
           this.$alert(res.message, 'is-success')
           this.$router.push({ name: 'Schedules' })
+          this.setIsVerify(true)
         } else {
           this.$alert(res.message, 'is-danger')
         }
