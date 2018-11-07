@@ -18,7 +18,7 @@ export default {
       'setIsVerify',
       'verifyUserLogin'
     ]),
-    async unloadHandler () {
+    async OnBeforeUnLoad () {
       let userRef = db.ref(this.getUserRef).child('statusActive')
       let res = await userRef.once('value')
       db.ref(userRef).update({
@@ -52,7 +52,7 @@ export default {
     this.setIsLoading(false)
   },
   created () {
-    window.addEventListener('beforeunload ', this.unloadHandler)
+    // window.addEventListener('beforeunload ', this.unloadHandler)
   }
 }
 </script>
