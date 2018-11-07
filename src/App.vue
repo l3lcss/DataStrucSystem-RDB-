@@ -17,13 +17,21 @@ export default {
       'setTADetails',
       'setIsVerify',
       'verifyUserLogin'
-    ])
+    ]),
+    async unloadHandler () {
+      let userRef = db.ref(this.getUserRef).child('statusActive')
+      let res = await userRef.once('value')
+      db.ref(userRef).update({
+        number: res.val().number - 1
+      })
+    }
   },
   computed: {
     ...mapGetters([
       'getIsLoading',
       'getTADetails',
-      'getIsVerify'
+      'getIsVerify',
+      'getUserRef'
     ])
   },
   async mounted () {
@@ -42,6 +50,9 @@ export default {
       this.$router.push({ name: 'Home' })
     }
     this.setIsLoading(false)
+  },
+  created () {
+    document.addEventListener('beforeunload', this.unloadHandler)
   }
 }
 </script>
