@@ -52,7 +52,7 @@ export default {
     this.setIsLoading(false)
   },
   created () {
-    document.addEventListener('beforeunload', this.unloadHandler)
+    window.addEventListener('beforeunload ', this.unloadHandler, false)
   }
 }
 </script>
