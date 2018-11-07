@@ -4,7 +4,7 @@ import '@firebase/auth'
 
 async function verifyLogin (data, params, userRef) {
   let prepareResults = {}
-  if (!params.pass) {
+  if (!params.pass && params.isAutoLogin) {
     prepareResults = {
       success: 1,
       message: `Welcome <b>${params.id}</b> EIEI :)`,
@@ -25,7 +25,8 @@ async function verifyLogin (data, params, userRef) {
       }
     }
   } else if (data) {
-    await firebase.auth().signInWithEmailAndPassword(`${params.id}@gmail.com`, params.pass).then(() => {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(`${params.id}@gmail.com`, params.pass)
       prepareResults = {
         success: 1,
         message: `Welcome <b>${params.id}</b> EIEI :)`,
@@ -34,12 +35,12 @@ async function verifyLogin (data, params, userRef) {
           userRef
         }
       }
-    }).catch(err => {
+    } catch (error) {
       prepareResults = {
         success: 0,
-        message: `logging in failed, ${err}`
+        message: `logging in failed, ${error}`
       }
-    })
+    }
   } else {
     prepareResults = {
       success: 0,

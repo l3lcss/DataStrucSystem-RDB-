@@ -40,7 +40,8 @@ export default {
     let auth = await firebaseFunc.verifyFirebaseLogin()
     if (auth) {
       let param = {
-        id: auth.email.split('@')[0]
+        id: auth.email.split('@')[0],
+        isAutoLogin: true
       }
       await this.verifyUserLogin(param)
       this.setIsVerify(true)
