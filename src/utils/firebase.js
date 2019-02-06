@@ -146,15 +146,7 @@ export default {
       })
     }
   },
-  async firebaseLogout (userRef) {
-    if (userRef) {
-      let userStatus = userRef.child('statusActive')
-      let res = await userStatus.once('value')
-      db.ref(userStatus).update({
-        number: res.val().number - 1
-      })
-      document.removeEventListener('visibilitychange', event.listenerVisible)
-    }
+  async firebaseLogout () {
     try {
       await firebase.auth().signOut()
       console.log('Sign-out successful.')

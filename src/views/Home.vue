@@ -53,7 +53,7 @@
 <script>
 import ScrollReveal from 'scrollreveal'
 import ModalSetPass from './ModalSetPass'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -103,11 +103,6 @@ export default {
       }
       this.setIsLoading(false)
     }
-  },
-  computed: {
-    ...mapGetters([
-      'getUserLogin'
-    ])
   }
 }
 </script>
