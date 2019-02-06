@@ -33,8 +33,8 @@ const actions = {
   async solveSchedule ({ getters }) {
     await firebaseFunc.solveSchedule(getters.getUserLogin, getters.getTADetails)
   },
-  async firebaseLogout ({ getters }) {
-    await firebaseFunc.firebaseLogout(getters.getUserRef)
+  async firebaseLogout ({ _ }) {
+    await firebaseFunc.firebaseLogout()
   },
   async changePassword (_, params) {
     let res = await firebaseFunc.changePassword(params)
