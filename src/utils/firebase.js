@@ -1,6 +1,7 @@
 import db from '@/config/firebase'
 import firebase from '@firebase/app'
 import '@firebase/auth'
+import moment from 'moment'
 
 async function verifyLogin (data, params, userRef) {
   let prepareResults = {}
@@ -49,6 +50,38 @@ async function verifyLogin (data, params, userRef) {
   }
   return prepareResults
 }
+function validateHistoryTestYes (historyTest, user) {
+  if (!historyTest) {
+    let now = moment(new Date())
+    user.date = now.format('x')
+    return [user]
+  }
+  const dupId = historyTest.filter(obj => obj.ID === user.ID)
+  let isSame = dupId.length ? checkIsSame(dupId) : false
+  if (dupId === 0 || !isSame) {
+    let now = moment(new Date())
+    user.date = now.format('x')
+    historyTest.push(user)
+  }
+  return historyTest
+}
+function checkIsSame (dupId) {
+  for (let i = 0; i < dupId.length; i++) {
+    var isSame = moment(parseInt(dupId[i].date)).isSame(moment(), 'day')
+  }
+  return isSame
+}
+function validateHistoryTestNo (historyTest, ID) {
+  const dupId = historyTest.filter(obj => obj.ID === ID)
+  for (let i = 0; i < dupId.length; i++) {
+    var isSame = moment(parseInt(dupId[i].date)).isSame(moment(), 'day')
+    if (isSame) {
+      var index = historyTest.findIndex(obj => obj.date === dupId[i].date)
+      historyTest.splice(index, 1)
+    }
+  }
+  return historyTest
+}
 export default {
   async verifyUserLogin (params) {
     let prepareResults = {}
@@ -81,8 +114,10 @@ export default {
     }
   },
   async setReservTime (params, userLogin) {
+    let ID = userLogin['.key']
+    let name = userLogin.name
     const taRef = db.ref(`ta/${params.TA}`)
-    const stdRef = db.ref(`students/${userLogin['.key']}`)
+    const stdRef = db.ref(`students/${ID}`)
     let taGet = await taRef.once('value')
     let taVal = taGet.val()
     const index = taVal.schedules.findIndex(obj => obj.time === params.time)
@@ -91,11 +126,13 @@ export default {
         return false
       } else {
         taVal.schedules[index] = {
-          ID: userLogin['.key'],
-          name: userLogin.name,
+          ID,
+          name,
           time: params.time
         }
         taRef.update({ schedules: taVal.schedules })
+        let historyTest = validateHistoryTestYes(taVal.history_test, taVal.schedules[index])
+        taRef.update({ history_test: historyTest })
       }
       stdRef.update({
         schedule: {
@@ -109,6 +146,8 @@ export default {
         time: params.time
       }
       taRef.update({ schedules: taVal.schedules })
+      let historyTest = validateHistoryTestNo(taVal.history_test, ID)
+      taRef.update({ history_test: historyTest })
       stdRef.update({
         schedule: {
           TA: '',
