@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Schedules from './views/schedule/Schedules.vue'
 import TAschedule from './views/ta/TAschedule'
+import Dashboard from './views/dashboard/dashboard'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/TAschedule',
       name: 'TAschedule',
       component: TAschedule
+    },
+    {
+      path: '/Dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     }
   ]
 })

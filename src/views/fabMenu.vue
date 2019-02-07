@@ -11,7 +11,7 @@
       <v-btn
         slot="activator"
         v-model="fab"
-        color="blue darken-2"
+        color="indigo darken-4"
         dark
         fab
         :icon="true"
@@ -22,7 +22,25 @@
         fab
         dark
         large
-        color="teal darken-1"
+        color="indigo darken-4"
+        @click="schedule()"
+      >
+        <v-icon>mdi-checkbox-multiple-marked</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        large
+        color="indigo darken-4"
+        @click="dashborad()"
+      >
+        <v-icon>mdi-view-dashboard</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        dark
+        large
+        color="indigo darken-4"
         @click="changePass()"
       >
         <v-icon>mdi-circle-edit-outline</v-icon>
@@ -78,6 +96,12 @@ export default {
         this.$alert(`send reset password failed, ${res.error}.`, 'is-danger')
       }
       this.setIsLoading(false)
+    },
+    dashborad () {
+      this.$router.push({ name: 'Dashboard' })
+    },
+    schedule () {
+      this.$router.push({ name: 'Schedules' })
     }
   },
   computed: {
