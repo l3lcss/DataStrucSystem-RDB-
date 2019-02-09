@@ -54,6 +54,7 @@ function validateHistoryTestYes (historyTest, user) {
   if (!historyTest) {
     let now = moment(new Date())
     user.date = now.format('x')
+    user.status = 'PENDING'
     return [user]
   }
   const dupId = historyTest.filter(obj => obj.ID === user.ID)
@@ -61,6 +62,7 @@ function validateHistoryTestYes (historyTest, user) {
   if (dupId === 0 || !isSame) {
     let now = moment(new Date())
     user.date = now.format('x')
+    user.status = 'PENDING'
     historyTest.push(user)
   }
   return historyTest
