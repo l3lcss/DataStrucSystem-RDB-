@@ -15,6 +15,9 @@
                   style="font-size:1rem;"
                   :data="std ? std : []">
                   <template slot-scope='props'>
+                    <b-table-column field="time" label="Time" sortable centered>
+                      {{ props.row.time }}
+                    </b-table-column>
                     <b-table-column field="ID" label="ID" centered>
                       {{ props.row.ID }}
                     </b-table-column>
@@ -25,9 +28,6 @@
                     </b-table-column>
                     <b-table-column field="name" label="Name" centered>
                       {{ props.row.name }}
-                    </b-table-column>
-                    <b-table-column field="time" label="Time" sortable centered>
-                      {{ props.row.time }}
                     </b-table-column>
                     <b-table-column field="status" label="Status" sortable centered>
                       <b-field position="is-centered">

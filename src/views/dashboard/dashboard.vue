@@ -54,6 +54,9 @@
               style="font-size:1.3rem;"
               :data="getTADetails[1].history_test ? mapDataByDate(getTADetails[1].history_test) : []">
               <template slot-scope='props' class="is-large">
+                <b-table-column field="time" label="Time" sortable centered>
+                  {{ props.row.time }}
+                </b-table-column>
                 <b-table-column field="ID" label="ID" centered>
                   {{ props.row.ID }}
                 </b-table-column>
@@ -64,9 +67,6 @@
                 </b-table-column>
                 <b-table-column field="name" label="Name" centered>
                   {{ props.row.name }}
-                </b-table-column>
-                <b-table-column field="time" label="Time" sortable centered>
-                  {{ props.row.time }}
                 </b-table-column>
                 <b-table-column field="status" label="Status" sortable centered>
                   <span class="tag is-warning is-large" v-if="props.row.status === 'PENDING'">
@@ -88,6 +88,9 @@
               style="font-size:1.3rem;"
               :data="getTADetails[2].history_test ? mapDataByDate(getTADetails[2].history_test) : []">
               <template slot-scope='props' class="is-large">
+                <b-table-column field="time" label="Time" sortable centered>
+                  {{ props.row.time }}
+                </b-table-column>
                 <b-table-column field="ID" label="ID" centered>
                   {{ props.row.ID }}
                 </b-table-column>
@@ -98,9 +101,6 @@
                 </b-table-column>
                 <b-table-column field="name" label="Name" centered>
                   {{ props.row.name }}
-                </b-table-column>
-                <b-table-column field="time" label="Time" sortable centered>
-                  {{ props.row.time }}
                 </b-table-column>
                 <b-table-column field="status" label="Status" sortable centered>
                   <span class="tag is-warning is-large" v-if="props.row.status === 'PENDING'">
@@ -122,6 +122,9 @@
               style="font-size:1.3rem;"
               :data="getTADetails[3].history_test ? mapDataByDate(getTADetails[3].history_test) : []">
               <template slot-scope='props' class="is-large">
+                <b-table-column field="time" label="Time" sortable centered>
+                  {{ props.row.time }}
+                </b-table-column>
                 <b-table-column field="ID" label="ID" centered>
                   {{ props.row.ID }}
                 </b-table-column>
@@ -132,9 +135,6 @@
                 </b-table-column>
                 <b-table-column field="name" label="Name" centered>
                   {{ props.row.name }}
-                </b-table-column>
-                <b-table-column field="time" label="Time" sortable centered>
-                  {{ props.row.time }}
                 </b-table-column>
                 <b-table-column field="status" label="Status" sortable centered>
                   <span class="tag is-warning is-large" v-if="props.row.status === 'PENDING'">
