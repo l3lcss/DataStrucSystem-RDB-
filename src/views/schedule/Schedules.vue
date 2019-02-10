@@ -2,7 +2,7 @@
   <div v-if="getIsVerify">
     <div class="columns is-mobile is-centered header">
       <div class="column is-10 load is-size-5 has-text-weight-bold">
-        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="TITLE">TITLE</div>
+        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="BST">BST</div>
       </div>
     </div>
     <div class="columns is-mobile is-centered">
@@ -17,9 +17,9 @@
           <slide>
             <TA3 />
           </slide>
-          <slide>
+          <!-- <slide>
             <TA4 />
-          </slide>
+          </slide> -->
         </carousel>
       </div>
     </div>

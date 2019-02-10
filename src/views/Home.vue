@@ -3,7 +3,7 @@
     <div class="column">
       <div class="columns is-mobile is-centered ">
         <div class="column is-8">
-          <div class="glitch load1 " data-text="BLACKPINK" style="color:white;margin-bottom:1vh;">BLACKPINK</div>
+          <div class="glitch load1 " data-text="DATASTRUCTURE" style="color:white;margin-bottom:1vh;">DATASTRUCTURE</div>
         </div>
       </div>
       <div class="columns is-mobile is-centered ">

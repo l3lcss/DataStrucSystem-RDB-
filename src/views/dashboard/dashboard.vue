@@ -2,7 +2,7 @@
   <div v-if="getIsVerify">
     <div class="columns is-mobile is-centered header">
       <div class="column is-10 load is-size-5 has-text-weight-bold">
-        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="TITLE">TITLE</div>
+        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="BST">BST</div>
       </div>
     </div>
     <div class="columns is-mobile is-centered">
@@ -20,6 +20,9 @@
               style="font-size:1.3rem;"
               :data="getTADetails[0].history_test ? mapDataByDate(getTADetails[0].history_test) : []">
               <template slot-scope='props' class="is-large">
+                <b-table-column field="time" label="Time" sortable centered>
+                  {{ props.row.time }}
+                </b-table-column>
                 <b-table-column field="ID" label="ID" centered>
                   {{ props.row.ID }}
                 </b-table-column>
@@ -30,9 +33,6 @@
                 </b-table-column>
                 <b-table-column field="name" label="Name" centered>
                   {{ props.row.name }}
-                </b-table-column>
-                <b-table-column field="time" label="Time" sortable centered>
-                  {{ props.row.time }}
                 </b-table-column>
                 <b-table-column field="status" label="Status" sortable centered>
                   <span class="tag is-warning is-large" v-if="props.row.status === 'PENDING'">
