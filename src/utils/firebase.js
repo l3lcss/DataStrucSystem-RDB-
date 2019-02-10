@@ -59,7 +59,8 @@ function validateHistoryTestYes (historyTest, user) {
   }
   const dupId = historyTest.filter(obj => obj.ID === user.ID)
   let isSame = dupId.length ? checkIsSame(dupId) : false
-  if (dupId === 0 || !isSame) {
+  let lastSchedule = dupId[dupId.length - 1]
+  if (dupId === 0 || !isSame || lastSchedule.status === 'FAILED') {
     let now = moment(new Date())
     user.date = now.format('x')
     user.status = 'PENDING'
@@ -77,7 +78,7 @@ function validateHistoryTestNo (historyTest, ID) {
   const dupId = historyTest.filter(obj => obj.ID === ID)
   for (let i = 0; i < dupId.length; i++) {
     var isSame = moment(parseInt(dupId[i].date)).isSame(moment(), 'day')
-    if (isSame) {
+    if (isSame && dupId[i].status !== 'FAILED') {
       var index = historyTest.findIndex(obj => obj.date === dupId[i].date)
       historyTest.splice(index, 1)
     }
@@ -89,7 +90,9 @@ export default {
     let prepareResults = {}
     const stdRef = db.ref(`students/${params.id}`)
     let stdData = await stdRef.once('value')
-    if (!stdData.exists()) {
+    const taRef = db.ref(`ta/${params.id}`)
+    const taData = await taRef.once('value')
+    if (!stdData.exists() && !taData.exists()) {
       stdRef.set({
         FIRST_LOGIN: 1,
         identity: 'students',
@@ -100,12 +103,10 @@ export default {
         }
       })
       stdData = await stdRef.once('value')
-    }
-    const taRef = db.ref(`ta/${params.id}`)
-    if (stdData.exists()) {
+      prepareResults = verifyLogin(stdData.val(), params, stdRef)
+    } else if (stdData.exists()) {
       prepareResults = verifyLogin(stdData.val(), params, stdRef)
     } else {
-      const taData = await taRef.once('value')
       prepareResults = verifyLogin(taData.val(), params, taRef)
     }
     return prepareResults

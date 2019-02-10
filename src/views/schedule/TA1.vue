@@ -19,7 +19,7 @@
                 <th>{{schedule.time}}</th>
                 <td v-if="schedule.name">{{schedule.name}}</td>
                 <td v-else></td>
-                <td v-if="schedule.ID && schedule.ID !== getUserLogin['.key']">
+                <td v-if="schedule.ID && schedule.ID !== getUserLogin['.key'] || schedule.status === 'PASSED' || schedule.status === 'FAILED'">
                   <b-field>
                     <b-radio-button
                       native-value="Disabled"
@@ -95,12 +95,12 @@ export default {
     ]),
     async reservEventYes (value) {
       await this.setReservTime({ time: value, TA: '11', status: true })
-      await this.solveSchedule()
+      // await this.solveSchedule()
       await this.initData()
     },
     async reservEventNo (value) {
       await this.setReservTime({ time: value, TA: '11', status: false })
-      await this.solveSchedule()
+      // await this.solveSchedule()
       await this.initData()
     },
     async initData () {
@@ -134,7 +134,7 @@ export default {
   },
   watch: {
     async getTADetails () {
-      await this.solveSchedule()
+      // await this.solveSchedule()
       await this.initData()
     }
   }

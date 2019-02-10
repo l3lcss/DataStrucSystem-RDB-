@@ -24,7 +24,8 @@ export default {
       'getIsLoading',
       'getTADetails',
       'getIsVerify',
-      'getUserRef'
+      'getUserRef',
+      'getUserLogin'
     ])
   },
   async mounted () {
@@ -38,7 +39,11 @@ export default {
       }
       await this.verifyUserLogin(param)
       this.setIsVerify(true)
-      this.$router.push({ name: 'Schedules' })
+      if (this.getUserLogin.identity === 'ta') {
+        this.$router.push({ name: 'TAschedule' })
+      } else {
+        this.$router.push({ name: 'Schedules' })
+      }
     } else {
       this.setIsVerify(true)
       this.$router.push({ name: 'Home' })

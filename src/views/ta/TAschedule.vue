@@ -11,22 +11,54 @@
           <div class="column is-12">
             <center>
               <p class="tableHead"> ตารางเวลา </p>
-              <table class="table">
-                <thead>
-                  <th>Time</th>
-                  <th>ID</th>
-                  <th>Name</th>
-                </thead>
-                <tbody>
-                  <tr v-for="(schedule, key) in getUserLogin.schedules" :key="key">
-                    <th>{{schedule.time}}</th>
-                    <td v-if="schedule.ID">{{schedule.ID}}</td>
-                    <td v-else></td>
-                    <td v-if="schedule.name">{{schedule.name}}</td>
-                    <td v-else></td>
-                  </tr>
-                </tbody>
-              </table>
+                <b-table
+                  style="font-size:1rem;"
+                  :data="std ? std : []">
+                  <template slot-scope='props'>
+                    <b-table-column field="ID" label="ID" centered>
+                      {{ props.row.ID }}
+                    </b-table-column>
+                    <b-table-column field="date" label="Booking Date" centered>
+                      <span class="tag is-info is-large">
+                        {{ formatDate(props.row.date) }}
+                      </span>
+                    </b-table-column>
+                    <b-table-column field="name" label="Name" centered>
+                      {{ props.row.name }}
+                    </b-table-column>
+                    <b-table-column field="time" label="Time" sortable centered>
+                      {{ props.row.time }}
+                    </b-table-column>
+                    <b-table-column field="status" label="Status" sortable centered>
+                      <b-field position="is-centered">
+                        <b-radio-button v-model="props.row.status"
+                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
+                          native-value="PASSED"
+                          type="is-success"
+                          @click.native="updateStatus(props.row, 'PASSED')">
+                          <b-icon icon="check"></b-icon>
+                          <span>PASSED</span>
+                        </b-radio-button>
+
+                        <b-radio-button v-model="props.row.status"
+                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
+                          native-value="PENDING"
+                          type="is-warning">
+                          <span>PENDING</span>
+                        </b-radio-button>
+
+                        <b-radio-button v-model="props.row.status"
+                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
+                          native-value="FAILED"
+                          type="is-danger"
+                          @click.native="updateStatus(props.row, 'FAILED')">
+                          <b-icon icon="close"></b-icon>
+                          <span>FAILED</span>
+                        </b-radio-button>
+                      </b-field>
+                    </b-table-column>
+                  </template>
+                </b-table>
             </center>
           </div>
         </div>
@@ -37,13 +69,15 @@
 </template>
 
 <script>
+import db from '../../config/firebase'
+import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
 import fabMenu from '../fabMenu'
 export default {
   name: 'TAschedule',
   data () {
     return {
-      srcRef: ''
+      std: []
     }
   },
   components: {
@@ -57,12 +91,40 @@ export default {
   methods: {
     ...mapActions([
       'setIsLoading'
-    ])
+    ]),
+    formatDate (d) {
+      return moment(parseInt(d)).format('DD/MM/YYYY HH:mm:ss')
+    },
+    async updateStatus (data, status) {
+      let index = this.getUserLogin.schedules.findIndex(e => e.ID === data.ID && e.time === data.time)
+      await db.ref(`ta/${this.getUserLogin['.key']}/schedules/${index}`).update({ status })
+      index = this.getUserLogin.history_test.findIndex(e => e.date === data.date)
+      await db.ref(`ta/${this.getUserLogin['.key']}/history_test/${index}`).update({ status })
+      if (status === 'FAILED') {
+        await db.ref(`students/${data.ID}/schedule`).update({ TA: '', time: '' })
+      }
+    }
   },
   async mounted () {
     if (Object.keys(this.getUserLogin).length === 0) {
       this.setIsLoading(false)
       this.$router.push({ name: 'Home' })
+    }
+    this.std = this.getUserLogin.history_test.filter(e => {
+      let isSame = moment(parseInt(e.date)).isSame(moment(new Date()), 'day')
+      if (isSame) {
+        return e
+      }
+    })
+  },
+  watch: {
+    async getUserLogin () {
+      this.std = this.getUserLogin.history_test.filter(e => {
+        let isSame = moment(parseInt(e.date)).isSame(moment(new Date()), 'day')
+        if (isSame) {
+          return e
+        }
+      })
     }
   }
 }

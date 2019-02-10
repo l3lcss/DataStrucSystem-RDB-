@@ -132,7 +132,7 @@ export default {
   },
   watch: {
     async getTADetails () {
-      await this.solveSchedule()
+      // await this.solveSchedule()
       await this.initData()
     }
   }
