@@ -1,4 +1,4 @@
-import db from '@/config/firebase'
+import db from '../config/firebase'
 import firebase from '@firebase/app'
 import '@firebase/auth'
 import moment from 'moment'
@@ -88,8 +88,20 @@ export default {
   async verifyUserLogin (params) {
     let prepareResults = {}
     const stdRef = db.ref(`students/${params.id}`)
+    let stdData = await stdRef.once('value')
+    if (!stdData.exists()) {
+      stdRef.set({
+        FIRST_LOGIN: 1,
+        identity: 'students',
+        name: params.id,
+        schedule: {
+          TA: '',
+          time: ''
+        }
+      })
+      stdData = await stdRef.once('value')
+    }
     const taRef = db.ref(`ta/${params.id}`)
-    const stdData = await stdRef.once('value')
     if (stdData.exists()) {
       prepareResults = verifyLogin(stdData.val(), params, stdRef)
     } else {
