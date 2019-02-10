@@ -5,6 +5,15 @@
         <p class="modal-card-title">Define your password</p>
       </header>
       <section class="modal-card-body">
+        <b-field label="name">
+          <b-input
+            v-model="name"
+            type="text"
+            placeholder="Your Display Name"
+            required>
+          </b-input>
+        </b-field>
+
         <b-field label="Password">
           <b-input
             v-model="pass"
@@ -34,13 +43,15 @@
 </template>
 
 <script>
+import db from '../config/firebase'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ModalSetPass',
   data () {
     return {
       pass: '',
-      re_pass: ''
+      re_pass: '',
+      name: ''
     }
   },
   methods: {
@@ -56,6 +67,7 @@ export default {
           pass: this.pass,
           identity: this.getUserLogin.identity
         }
+        await db.ref(`students/${params.id}/name`).set(this.name)
         let res = await this.setPassword(params)
         if (res.success) {
           this.$alert(res.message, 'is-success')
