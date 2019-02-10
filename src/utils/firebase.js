@@ -27,7 +27,7 @@ async function verifyLogin (data, params, userRef) {
     }
   } else if (data) {
     try {
-      await firebase.auth().signInWithEmailAndPassword(`${params.id}@gmail.com`, params.pass)
+      await firebase.auth().signInWithEmailAndPassword(`${params.id}@fitm.kmutnb.ac.th`, params.pass)
       prepareResults = {
         success: 1,
         message: `Welcome <b>${params.id}</b> EIEI :)`,
@@ -113,7 +113,7 @@ export default {
   },
   async setPassword (params) {
     try {
-      await firebase.auth().createUserWithEmailAndPassword(`${params.id}@gmail.com`, params.pass)
+      await firebase.auth().createUserWithEmailAndPassword(`${params.id}@fitm.kmutnb.ac.th`, params.pass)
       await db.ref(`${params.identity}/${params.id}`).update({
         FIRST_LOGIN: 0
       })
@@ -210,7 +210,7 @@ export default {
   },
   async changePassword (userLogin) {
     try {
-      await firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@gmail.com`)
+      await firebase.auth().sendPasswordResetEmail(`${userLogin['.key']}@fitm.kmutnb.ac.th`)
       return {
         message: 'send reset password success.',
         success: 1
