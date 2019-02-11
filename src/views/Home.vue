@@ -83,7 +83,7 @@ export default {
       this.setIsLoading(true)
       if (this.studentID) {
         const params = {
-          id: this.studentID,
+          id: this.studentID.replace(/\s/g, ''),
           pass: this.password
         }
         const res = await this.verifyUserLogin(params)
