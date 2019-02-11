@@ -81,7 +81,7 @@ export default {
       this.$dialogConfirm(
         'is-info',
         'RESET PASSWORD',
-        `We will send a password reset email to <strong>${this.getUserLogin['.key']}@gmail.com</strong>`,
+        `We will send a password reset email to <strong>${this.getUserLogin['.key']}@fitm.kmutnb.ac.th</strong>`,
         'Send Email',
         () => this.sendEamil()
       )
