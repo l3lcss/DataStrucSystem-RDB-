@@ -32,30 +32,30 @@
                     <b-table-column field="status" label="Status" sortable centered>
                       <b-field position="is-centered">
                         <b-radio-button v-model="props.row.status"
-                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
                           native-value="PASSED"
-                          type="is-success"
-                          @click.native="updateStatus(props.row, 'PASSED')">
+                          type="is-success">
                           <b-icon icon="check"></b-icon>
                           <span>PASSED</span>
                         </b-radio-button>
 
                         <b-radio-button v-model="props.row.status"
-                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
                           native-value="PENDING"
                           type="is-warning">
                           <span>PENDING</span>
                         </b-radio-button>
 
                         <b-radio-button v-model="props.row.status"
-                          :disabled="props.row.status === 'PASSED' || props.row.status === 'FAILED' ? true : false"
                           native-value="FAILED"
-                          type="is-danger"
-                          @click.native="updateStatus(props.row, 'FAILED')">
+                          type="is-danger">
                           <b-icon icon="close"></b-icon>
                           <span>FAILED</span>
                         </b-radio-button>
                       </b-field>
+                    </b-table-column>
+                    <b-table-column field="" label="" centered>
+                      <div class="button is-focused" @click="updateStatus(props.row)">
+                        OK
+                      </div>
                     </b-table-column>
                   </template>
                 </b-table>
@@ -95,14 +95,16 @@ export default {
     formatDate (d) {
       return moment(parseInt(d)).format('DD/MM/YYYY HH:mm:ss')
     },
-    async updateStatus (data, status) {
+    async updateStatus (data) {
+      this.setIsLoading(true)
       let index = this.getUserLogin.schedules.findIndex(e => e.ID === data.ID && e.time === data.time)
-      await db.ref(`ta/${this.getUserLogin['.key']}/schedules/${index}`).update({ status })
-      index = this.getUserLogin.history_test.findIndex(e => e.date === data.date)
-      await db.ref(`ta/${this.getUserLogin['.key']}/history_test/${index}`).update({ status })
-      if (status === 'FAILED') {
+      await db.ref(`ta/${this.getUserLogin['.key']}/schedules/${index}`).update({ status: data.status })
+      index = this.getUserLogin.history_test.findIndex(e => e.ID === data.ID && e.date === data.date)
+      await db.ref(`ta/${this.getUserLogin['.key']}/history_test/${index}`).update({ status: data.status })
+      if (data.status === 'FAILED') {
         await db.ref(`students/${data.ID}/schedule`).update({ TA: '', time: '' })
       }
+      this.setIsLoading(false)
     }
   },
   async mounted () {
