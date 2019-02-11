@@ -159,6 +159,7 @@ table td, table th {
   padding-bottom: 5%;
 }
 .table thead td, .table thead th {
+  border: none;
   font-size: 1rem;
 }
 .table td, .table th {

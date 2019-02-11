@@ -150,6 +150,10 @@ table td, table th {
   font-size: 0.7rem;
   vertical-align: middle;
 }
+.table thead td, .table thead th {
+  border: none;
+  font-size: 1rem;
+}
 .tableHead {
   font-family: 'Kanit', sans-serif;
   font-size: 100%;
