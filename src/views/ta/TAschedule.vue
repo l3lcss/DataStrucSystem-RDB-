@@ -13,7 +13,9 @@
               <p class="tableHead"> ตารางเวลา </p>
                 <b-table
                   style="font-size:1rem;"
-                  :data="std ? std : []">
+                  :data="std ? std : []"
+                  default-sort-direction="asc"
+                  default-sort="time">
                   <template slot-scope='props'>
                     <b-table-column field="time" label="Time" sortable centered>
                       {{ props.row.time }}
