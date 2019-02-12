@@ -7,13 +7,13 @@
     </div>
     <div class="columns is-mobile is-centered">
       <div class="column is-12 load">
-        <!-- <b-field class="column is-2 load" style="margin-left:1rem;">
+        <b-field class="column is-2 load" style="margin-left:1rem;">
           <b-datepicker
             placeholder="Click to select..."
             icon="calendar-today"
             v-model="datePicked">
           </b-datepicker>
-        </b-field> -->
+        </b-field>
         <table class="table is-fullwidth table is-bordered">
             <thead>
               <th></th>
@@ -27,24 +27,9 @@
                 <td>
                   {{ schedule.time }}
                 </td>
-                <td>
-                  <span :class="displayColor(getTADetails[0].schedules[key].status)">
-                    {{ getTADetails[0].schedules[key].name }}
-                  </span>
-                </td>
-                <td>
-                  <span :class="displayColor(getTADetails[1].schedules[key].status)">
-                    {{ getTADetails[1].schedules[key].name }}
-                  </span>
-                </td>
-                <td>
-                  <span :class="displayColor(getTADetails[2].schedules[key].status)">
-                    {{ getTADetails[2].schedules[key].name }}
-                  </span>
-                </td>
-                <td>
-                  <span :class="displayColor(getTADetails[3].schedules[key].status)">
-                    {{ getTADetails[3].schedules[key].name }}
+                <td v-for="(schedule2, key2) in getTADetails" :key="key2">
+                  <span :class="displayColor(schedule2.history_test, schedule.time)">
+                    {{ filterStdByDatePicker(schedule2.history_test, schedule.time) }}
                   </span>
                 </td>
               </tr>
@@ -93,14 +78,31 @@ export default {
     formatDate (d) {
       return moment(parseInt(d)).format('DD/MM/YYYY HH:mm:ss')
     },
-    displayColor (status) {
-      if (status === 'PASSED') {
+    displayColor (data, time) {
+      let res = data.find(e => {
+        let isSame = moment(parseInt(e.date)).isSame(moment(new Date(this.datePicked)), 'day')
+        if (isSame && e.time === time) {
+          return e
+        }
+      })
+      if (res && res.status === 'PASSED') {
         return 'tag is-success is-large'
-      } else if (status === 'FAILED') {
+      } else if (res && res.status === 'FAILED') {
         return 'tag is-danger is-large'
-      } else if (status === 'PENDING') {
+      } else if (res && res.status === 'PENDING') {
         return 'tag is-warning is-large'
+      } else {
+        return ''
       }
+    },
+    filterStdByDatePicker (data, time) {
+      let res = data.find(e => {
+        let isSame = moment(parseInt(e.date)).isSame(moment(new Date(this.datePicked)), 'day')
+        if (isSame && e.time === time) {
+          return e
+        }
+      })
+      return res ? res.name : ''
     }
   }
 }
