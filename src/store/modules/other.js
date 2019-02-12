@@ -1,3 +1,4 @@
+import firebaseFunc from '@/utils/firebase'
 const state = {
   isLoading: false,
   isVerify: false
@@ -8,6 +9,9 @@ const actions = {
   },
   setIsVerify ({ commit }, payload) {
     commit('SET_IS_VERIFY', payload)
+  },
+  dailyReset ({ _ }) {
+    firebaseFunc.dailyReset()
   }
 }
 const mutations = {

@@ -226,5 +226,38 @@ export default {
         resolve(user)
       })
     })
+  },
+  async dailyReset () {
+    let stdRef = db.ref('students')
+    let stdGet = await stdRef.once('value')
+    let stdVal = stdGet.val()
+    for (const key in stdVal) {
+      if (stdVal.hasOwnProperty(key)) {
+        await db.ref(`students/${key}/schedule`).update({ TA: '', time: '' })
+      }
+    }
+    console.log('std done!')
+    let taRef = db.ref('ta')
+    let taGet = await taRef.once('value')
+    let taVal = taGet.val()
+    for (const key in taVal) {
+      if (taVal.hasOwnProperty(key)) {
+        await db.ref(`ta/${key}/schedules`).set([
+          { time: '17:00' },
+          { time: '17:15' },
+          { time: '17:30' },
+          { time: '17:45' },
+          { time: '18:00' },
+          { time: '18:15' },
+          { time: '18:30' },
+          { time: '18:45' },
+          { time: '19:00' },
+          { time: '19:15' },
+          { time: '19:30' },
+          { time: '19:45' }
+        ])
+      }
+    }
+    console.log('ta done!')
   }
 }

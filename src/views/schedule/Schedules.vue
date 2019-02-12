@@ -56,12 +56,27 @@ export default {
   methods: {
     ...mapActions([
       'solveSchedule',
-      'setIsLoading'
-    ])
+      'setIsLoading',
+      'dailyReset'
+    ]),
+    async dailyReset1 () {
+      this.setIsLoading(true)
+      await this.dailyReset()
+      this.setIsLoading(false)
+    }
   },
   async mounted () {
+    let vm = this
     if (Object.keys(this.getUserLogin).length === 0) {
       this.$router.push({ name: 'Home' })
+    }
+    if (this.getUserLogin.ASDASDHAKJSD) {
+      this.$dialog.confirm({
+        message: 'Continue to Daily reset ??',
+        onConfirm: () => {
+          vm.dailyReset1()
+        }
+      })
     }
     // await this.solveSchedule()
   }
