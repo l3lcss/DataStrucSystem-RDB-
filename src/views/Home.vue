@@ -33,13 +33,26 @@
       <div class="columns is-mobile is-centered ">
         <div class="column is-8 load4">
           <a class="button is-medium" @click="Login()" id="btnLogin" >
-            <span class="icon">
+            <span class="icon" style="margin: 0 1.1vw 0 0vw">
               <b-icon
                 icon="arrow-right-bold-box"
                 size="is-medium">
             </b-icon>
             </span>
             <span>LOGIN</span>
+          </a>
+        </div>
+      </div>
+      <div class="columns is-mobile is-centered ">
+        <div class="column is-8 load4">
+          <a class="button is-medium" @click="forgetPass()" id="forgetPass" >
+            <span class="icon" style="margin: 0 1.1vw 0 0vw">
+              <b-icon
+                icon="lock-reset"
+                size="is-medium">
+            </b-icon>
+            </span>
+            <span>GETFOR PASSWORD</span>
           </a>
         </div>
       </div>
@@ -54,6 +67,8 @@
 import ScrollReveal from 'scrollreveal'
 import ModalSetPass from './ModalSetPass'
 import { mapActions } from 'vuex'
+import firebase from '@firebase/app'
+import '@firebase/auth'
 
 export default {
   name: 'Home',
@@ -102,6 +117,35 @@ export default {
         }
       }
       this.setIsLoading(false)
+    },
+    forgetPass () {
+      const vm = this
+      this.$dialog.prompt({
+        message: `<center><b>RESET PASSWORD</b></center>Please fill in Student ID.`,
+        inputAttrs: {
+          placeholder: 'e.g. 61060216xxxx',
+          maxlength: 13
+        },
+        onConfirm: (value) => {
+          vm.$dialogConfirm(
+            'is-info',
+            'RESET PASSWORD',
+            `We will send a password reset email to <strong>${value}@fitm.kmutnb.ac.th</strong>`,
+            'Send Email',
+            () => vm.confirmResetPass(value)
+          )
+        }
+      })
+    },
+    async confirmResetPass (value) {
+      this.setIsLoading(true)
+      try {
+        await firebase.auth().sendPasswordResetEmail(`${value}@fitm.kmutnb.ac.th`)
+        this.$alert('send reset password success.', 'is-success')
+      } catch (error) {
+        this.$alert(`send reset password failed, ${error}.`, 'is-danger')
+      }
+      this.setIsLoading(false)
     }
   }
 }
@@ -127,6 +171,14 @@ export default {
 #btnLogin:hover {
   transition: 0.3s all;
   background-color: rgb(255, 167, 167);
+}
+#forgetPass {
+  background-color: #3c64c2;
+  border: none;
+}
+#forgetPass:hover {
+  transition: 0.3s all;
+  background-color: rgb(107, 105, 223)
 }
 
 </style>
