@@ -52,7 +52,7 @@
                 size="is-medium">
             </b-icon>
             </span>
-            <span>GETFOR PASSWORD</span>
+            <span>FORGET PASSWORD</span>
           </a>
         </div>
       </div>
