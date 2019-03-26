@@ -52,7 +52,7 @@ async function verifyLogin (data, params, userRef) {
 }
 function validateHistoryTestYes (historyTest, user) {
   if (!historyTest) {
-    let now = moment(new Date())
+    let now = moment(new Date()).add(3, 'hours')
     user.date = now.format('x')
     return [user]
   }
@@ -60,7 +60,7 @@ function validateHistoryTestYes (historyTest, user) {
   let isSame = dupId.length ? checkIsSame(dupId) : false
   let lastSchedule = dupId[dupId.length - 1]
   if (dupId === 0 || !isSame || lastSchedule.status === 'FAILED') {
-    let now = moment(new Date())
+    let now = moment(new Date()).add(3, 'hours')
     user.date = now.format('x')
     historyTest.push(user)
   }
