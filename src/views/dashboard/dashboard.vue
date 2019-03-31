@@ -2,7 +2,7 @@
   <div v-if="getIsVerify">
     <div class="columns is-mobile is-centered header">
       <div class="column is-10 load is-size-5 has-text-weight-bold">
-        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="Hashing">Hashing</div>
+        <div class="glitch load is-mobile" style="color: #ffffff;" data-text="QS">QS</div>
       </div>
     </div>
     <div class="columns is-mobile is-centered">
