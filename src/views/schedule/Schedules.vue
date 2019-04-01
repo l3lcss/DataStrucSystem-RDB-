@@ -17,9 +17,9 @@
           <slide>
             <TA3 />
           </slide>
-          <slide>
+          <!-- <slide>
             <TA4 />
-          </slide>
+          </slide> -->
         </carousel>
       </div>
     </div>
