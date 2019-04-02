@@ -75,7 +75,7 @@ function checkIsSame (dupId) {
 function validateHistoryTestNo (historyTest, ID) {
   const dupId = historyTest.filter(obj => obj.ID === ID)
   for (let i = 0; i < dupId.length; i++) {
-    var isSame = moment(parseInt(dupId[i].date)).isSame(moment(), 'day')
+    var isSame = moment(parseInt(dupId[i].date)).isSame(moment().add(3, 'hours'), 'day')
     if (isSame && dupId[i].status !== 'FAILED') {
       var index = historyTest.findIndex(obj => obj.date === dupId[i].date)
       historyTest.splice(index, 1)
