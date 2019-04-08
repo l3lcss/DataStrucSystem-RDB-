@@ -30,7 +30,6 @@ export default {
   },
   async mounted () {
     this.setIsLoading(true)
-    window.location.reload()
     this.setTADetails(db.ref('ta'))
     let auth = await firebaseFunc.verifyFirebaseLogin()
     if (auth) {
