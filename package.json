@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "git log | head -1 | sed s/'commit '// | cut -c1-7 > ./static/version.txt && echo window.webVersion = \\'$(git log | head -1 | sed s/'commit '// | cut -c1-7)\\' > ./web_version.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "buefy": "^0.6.7",
     "firebase": "^5.5.0",
     "material-design-icons-iconfont": "^3.0.3",
